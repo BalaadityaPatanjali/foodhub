@@ -1,0 +1,278 @@
+{% extends 'orders/header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  :root {
+    --bg-light: #ffffff;
+    --bg-dark: #1e1e1e;
+    --text-light: #1f2937;
+    --text-dark: #f9f9f9;
+    --accent: #1e90ff;
+    --accent-hover: #187bcd;
+    --shadow: rgba(0, 0, 0, 0.08);
+  }
+
+  body.dark-mode {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+  }
+
+  .cart-wrapper {
+    min-height: 100vh;
+    padding: 3rem 1rem;
+    background: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  body.dark-mode .cart-wrapper {
+    background: var(--bg-dark);
+  }
+
+  .cart-box {
+    width: 90%;
+    max-width: 1200px;
+    background: var(--bg-light);
+    box-shadow: 0 8px 30px var(--shadow);
+    border-radius: 16px;
+    padding: 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  body.dark-mode .cart-box {
+    background: #2b2b2b;
+  }
+
+  .cart-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+  }
+
+  body.dark-mode .cart-title {
+    color: var(--text-dark);
+  }
+
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .cart-item-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+  }
+
+  .product-img {
+    height: 90px;
+    width: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+  }
+
+  .item-desc {
+    font-weight: 600;
+    color: #374151;
+  }
+
+  body.dark-mode .item-desc {
+    color: #f3f3f3;
+  }
+
+  .quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .quantity-btn {
+    border: none;
+    background-color: #e2e8f0;
+    padding: 6px 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .order-summary {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 2rem;
+  }
+
+  .summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .total-line {
+    font-weight: bold;
+    font-size: 1.15rem;
+  }
+
+  .checkout-btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 8px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .checkout-btn:hover {
+    background-color: var(--accent-hover);
+  }
+</style>
+
+<div class="cart-wrapper">
+  <div class="cart-title">Your Cart</div>
+  <div class="cart-box" id="cart_container"></div>
+</div>
+
+<script>
+  function renderCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const container = document.getElementById("cart_container");
+    container.innerHTML = "";
+
+    let total = 0;
+    let totalItems = 0;
+
+    cart.forEach((item, index) => {
+      item.quantity = item.quantity ?? 1;
+      item.price = item.price ?? 0;
+      item.image_url = item.image_url || "https://via.placeholder.com/90";
+
+      total += item.price * item.quantity;
+      totalItems += item.quantity;
+
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "cart-item";
+      itemDiv.innerHTML = `
+        <div class="cart-item-left">
+          <img src="${item.image_url}" alt="Product" class="product-img" />
+          <div class="item-desc">
+            ${item.item_description}<br>
+            $${item.price.toFixed(2)} each
+          </div>
+        </div>
+        <div class="quantity-control">
+          <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+          <span id="qty-${index}">${item.quantity}</span>
+          <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+        </div>
+        <div id="price-${index}">$${(item.price * item.quantity).toFixed(2)}</div>
+        <button class="btn btn-sm btn-danger" onclick="removeFromCart(${index})">Remove</button>
+      `;
+      container.appendChild(itemDiv);
+    });
+
+    const summaryDiv = document.createElement("div");
+    summaryDiv.className = "order-summary";
+    summaryDiv.innerHTML = `
+      <div class="summary-line total-line">
+        <span>Subtotal (${totalItems} items)</span>
+        <span>$${total.toFixed(2)}</span>
+      </div>
+      <div class="summary-line">
+        <span>Delivery Charge</span>
+        <span>Free</span>
+      </div>
+      <button id="checkout_button" type="button" class="checkout-btn" onclick="checkout()">Checkout</button>
+    `;
+    container.appendChild(summaryDiv);
+  }
+
+  function updateQuantity(index, change) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart[index].quantity = cart[index].quantity ?? 1;
+    const newQty = cart[index].quantity + change;
+    if (newQty >= 1) {
+      cart[index].quantity = newQty;
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+  }
+
+  function removeFromCart(index) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  function checkout() {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  let total = 0;
+  let invalidPrice = false;
+
+  cart.forEach(item => {
+    const price = parseFloat(item.price);
+    const qty = parseInt(item.quantity || 1);
+    if (isNaN(price)) {
+      invalidPrice = true;
+    } else {
+      total += price * qty;
+    }
+  });
+
+  if (invalidPrice) {
+    alert("One or more items in your cart have invalid prices.");
+    return;
+  }
+
+  if (cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  fetch("{% url 'orders:checkout' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-CSRFToken": "{{ csrf_token }}"
+    },
+    body: new URLSearchParams({
+      cart: JSON.stringify(cart),
+      price_of_cart: total.toFixed(2)
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    showToast(data.result || "Order placed successfully!");
+    localStorage.removeItem("cart");
+    setTimeout(() => {
+      window.location.href = "{% url 'orders:view_orders' %}";
+    }, 2000);
+  })
+  .catch(error => {
+    console.error("Checkout failed:", error);
+    alert("There was an error processing your order.");
+  });
+}
+
+  document.addEventListener("DOMContentLoaded", renderCart);
+</script>
+<script src="{% static 'orders/js/base.js' %}"></script>
+
+{% endblock %}

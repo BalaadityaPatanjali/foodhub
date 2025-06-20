@@ -1,0 +1,138 @@
+{% extends 'orders/header.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+  <h4 style="margin:10px; text-align:center;"> Choose one of the Pizza's 🍕 </h4>
+  <div class="row justify-content-center">
+    <div class="card pizza-card" id="regular_pizza_card" style="width: 24rem; margin:10px;">
+      <div class="card-body">
+        <h5 class="card-title">Regular</h5>
+        {% for pizza in regular_pizza %}
+          {% if pizza.category_description != "default" %}
+            <p class="card-text">{{ pizza.category_description | safe}}</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card pizza-card" id="sicillian_pizza_card" style="width: 24rem; margin:10px;">
+      <div class="card-body">
+        <h5 class="card-title">Sicillian</h5>
+        {% for pizza in sicillian_pizza %}
+          {% if pizza.category_description != "default" %}
+            <p class="card-text">{{ pizza.category_description | safe }}</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <table class="table" id="sicillian_pizza_table" style="border: 2px solid black">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Sicillian Pizza</th>
+          <th scope="col">Small</th>
+          <th scope="col">Large</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pizza in sicillian_pizza %}
+          <tr>
+            <th>{{ pizza.pizza_choice }}</th>
+            {% if forloop.counter0 in number_of_toppings %}
+              <td><button type="button" class="btn btn-primary add_to_cart" onclick="pizza_toppings({{ forloop.counter0 }}, 'Small Sicillian', {{ pizza.small_price }})"><strong>{{ pizza.small_price }}</strong></button></td>
+              <td><button type="button" class="btn btn-success add_to_cart" onclick="pizza_toppings({{ forloop.counter0 }}, 'Large Sicillian', {{ pizza.large_price }})"><strong>{{ pizza.large_price }}</strong></button></td>
+            {% else %}
+              <td><button type="button" class="btn btn-primary add_to_cart" onclick='add_to_cart({"item_description": "Small Sicillian Pizza - {{ pizza.pizza_choice }}", "price": {{ pizza.small_price }}, "image_url": "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"})'><strong>{{ pizza.small_price }}</strong></button></td>
+              <td><button type="button" class="btn btn-success add_to_cart" onclick='add_to_cart({"item_description": "Large Sicillian Pizza - {{ pizza.pizza_choice }}", "price": {{ pizza.large_price }}, "image_url": "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"})'><strong>{{ pizza.large_price }}</strong></button></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <table class="table" id="regular_pizza_table" style="border: 2px solid black">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Regular Pizza</th>
+          <th scope="col">Small</th>
+          <th scope="col">Large</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pizza in regular_pizza %}
+          <tr>
+            <th>{{ pizza.pizza_choice }}</th>
+            {% if forloop.counter0 in number_of_toppings %}
+              <td><button type="button" class="btn btn-primary add_to_cart" onclick="pizza_toppings({{ forloop.counter0 }}, 'Small Regular', {{ pizza.small_price }})"><strong>{{ pizza.small_price }}</strong></button></td>
+              <td><button type="button" class="btn btn-success add_to_cart" onclick="pizza_toppings({{ forloop.counter0 }}, 'Large Regular', {{ pizza.large_price }})"><strong>{{ pizza.large_price }}</strong></button></td>
+            {% else %}
+              <td><button type="button" class="btn btn-primary add_to_cart" onclick='add_to_cart({"item_description": "Small Regular Pizza - {{ pizza.pizza_choice }}", "price": {{ pizza.small_price }}, "image_url": "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"})'><strong>{{ pizza.small_price }}</strong></button></td>
+              <td><button type="button" class="btn btn-success add_to_cart" onclick='add_to_cart({"item_description": "Large Regular Pizza - {{ pizza.pizza_choice }}", "price": {{ pizza.large_price }}, "image_url": "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"})'><strong>{{ pizza.large_price }}</strong></button></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal" id="toppings_modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Toppings</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label id="toppings_label" for="select_toppings"></label>
+        <select multiple class="form-control" id="select_toppings">
+          {% for topping in toppings %}
+            <option>{{ topping }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button id="submit_toppings" type="button" class="btn btn-primary">Add to cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const pizzaOptions = {
+    regular: document.getElementById('regular_pizza_card'),
+    sicillian: document.getElementById('sicillian_pizza_card')
+  };
+  let currently_selected = null;
+
+  function selectPizza(type) {
+    if (currently_selected === type) return;
+    currently_selected = type;
+
+    Object.entries(pizzaOptions).forEach(([key, element]) => {
+      if (key === type) {
+        element.classList.add("selected-border");
+      } else {
+        element.classList.remove("selected-border");
+      }
+    });
+  }
+
+  pizzaOptions.regular.onclick = () => selectPizza("regular");
+  pizzaOptions.sicillian.onclick = () => selectPizza("sicillian");
+</script>
+
+<style>
+  .selected-border {
+    border: 2px solid black !important;
+  }
+</style>
+
+<script src="{% static 'orders/js/base.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'orders/header.html' %}
+{% load custom_tags %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    {% if user.is_superuser %}
+    {% else %}
+      <h2 class="text-center font-weight-bold"> Orders by: {{ user.get_username }} </h2>
+    {% endif %}
+
+    <table class="table table-hover mt-4">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Order ID</th>
+          <th scope="col">Ordered by</th>
+          <th scope="col">Date</th>
+          <th scope="col">Order</th>
+          <th scope="col">Amount Paid</th>
+          <th scope="col">Delivered</th>
+        </tr>
+      </thead>
+      <tbody id="orders_table">
+        {% for row in rows %}
+        <tr class="{% if row.delivered %}table-success{% else %}table-danger{% endif %}" id="order-row-{{ row.id }}">
+          <td>{{ row.id }}</td>
+          <td>{{ row.username }}</td>
+          <td>{{ row.time_of_order }}</td>
+          <td>
+            <ul>
+              {% for item in row.order|format_cart %}
+              <li>{{ item|format_cart_item }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>£{{ row.price }}</td>
+          <td>
+            {% if not row.delivered %}
+              <button class="btn btn-sm btn-outline-success" onclick="markDelivered({{ row.id }})">Delivered</button>
+            {% else %}
+              <span class="badge badge-success">Done</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function markDelivered(orderId) {
+    const row = document.getElementById(`order-row-${orderId}`);
+    if (row) {
+      row.classList.remove('table-danger');
+      row.classList.add('table-success');
+      const buttonCell = row.querySelector('td:last-child');
+      buttonCell.innerHTML = '<span class="badge badge-success">Done</span>';
+    }
+    // You can also send a fetch POST request here to update order delivery status in backend
+  }
+</script>
+<script>
+  function markDelivered(orderId) {
+    fetch(`/mark-delivered/${orderId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ delivered: true })
+    })
+    .then(response => {
+      if (response.ok) {
+        const row = document.getElementById(`order-row-${orderId}`);
+        row.classList.remove('table-danger');
+        row.classList.add('table-success');
+        const buttonCell = row.querySelector('td:last-child');
+        buttonCell.innerHTML = '<span class="badge badge-success">Done</span>';
+      }
+    });
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  }
+</script>
+
+
+{% endblock %}
