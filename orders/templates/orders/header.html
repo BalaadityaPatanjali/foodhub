@@ -1,177 +1,1428 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FoodHub</title>
+<!-- Ultra-Modern Navigation Bar -->
+<nav class="modern-navbar">
+    <div class="navbar-container">
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <a href="{% url 'orders:index' %}" class="brand-logo">
+                <div class="logo-icon">
+                    <div class="logo-shape"></div>
+                    <div class="logo-accent"></div>
+                </div>
+                <span class="brand-text">FoodHub</span>
+            </a>
+        </div>
 
-  <!-- REQUIRED BOOTSTRAP & FONT AWESOME CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Navigation Links -->
+        {% if user.is_authenticated %}
+        <div class="nav-section">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/#menu" class="nav-link">
+                        <span class="link-text">Menu</span>
+                        <div class="link-underline"></div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/#why-foodhub" class="nav-link">
+                        <span class="link-text">Why FoodHub</span>
+                        <div class="link-underline"></div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/#directions" class="nav-link">
+                        <span class="link-text">Directions</span>
+                        <div class="link-underline"></div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/#contact" class="nav-link">
+                        <span class="link-text">Contact Us</span>
+                        <div class="link-underline"></div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
 
-  <style>
-    body {
-      transition: background-color 0.3s, color 0.3s;
-    }
-    
-    body.dark-mode {
-      background-color: #0e0f12;
-      color: #f2f2f2;
-    }
+        <!-- Action Buttons - Always show theme toggle, conditional user actions -->
+        <div class="action-section">
+            <!-- Theme Toggle - Always visible for everyone -->
+            <button class="action-btn theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+                <div class="theme-icon">
+                    <i class="fa fa-sun-o light-icon"></i>
+                    <i class="fa fa-moon-o dark-icon"></i>
+                </div>
+            </button>
 
-    body.dark-mode .navbar {
-      background-color: #16181d !important;
-    }
+            {% if user.is_authenticated %}
+            <!-- User-specific action buttons -->
+            <!-- View Orders -->
+            <a href="/view_orders" class="action-btn secondary-btn">
+                <i class="fa fa-list-alt"></i>
+                <span>View Orders</span>
+            </a>
 
-    body.dark-mode .navbar a,
-    body.dark-mode .navbar .nav-link,
-    body.dark-mode .navbar .btn-outline-primary,
-    body.dark-mode .navbar .btn-outline-secondary {
-      color: #f0f0f0 !important;
-      border-color: rgba(255, 255, 255, 0.2);
-    }
+            <!-- Cart -->
+            <a href="/cart" class="action-btn cart-btn">
+                <div class="cart-icon-wrapper">
+                    <i class="fa fa-shopping-bag"></i>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+                <span>My Cart</span>
+            </a>
 
-    body.dark-mode .navbar .btn-outline-primary:hover,
-    body.dark-mode .navbar .btn-outline-secondary:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
+            <!-- Logout -->
+            <a href="{% url 'orders:logout' %}" class="action-btn primary-btn">
+                <i class="fa fa-sign-out"></i>
+                <span>Logout</span>
+            </a>
+            {% else %}
+            <!-- Login button for non-authenticated users -->
+            <a href="{% url 'orders:login' %}" class="action-btn primary-btn">
+                <i class="fa fa-sign-in"></i>
+                <span>Login</span>
+            </a>
+            {% endif %}
+        </div>
 
-    body.dark-mode .btn-primary {
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      border: none;
-    }
-
-    body.dark-mode .btn-primary:hover {
-      opacity: 0.85;
-    }
-
-    body.dark-mode .btn-outline-primary,
-    body.dark-mode .btn-outline-secondary {
-      background-color: transparent;
-    }
-
-    body.dark-mode .btn-outline-primary:hover,
-    body.dark-mode .btn-outline-secondary:hover {
-      background-color: rgba(255,255,255,0.1);
-    }
-
-    body.dark-mode .btn-primary:focus,
-    body.dark-mode .btn:focus {
-      outline: none;
-      box-shadow: none;
-    }
-
-    body.dark-mode .card,
-    body.dark-mode .menu-card,
-    body.dark-mode .highlight-card {
-      background-color: #1a1c22 !important;
-      color: #f2f2f2 !important;
-      border: none;
-    }
-
-    body.dark-mode .gradient-button,
-    .gradient-button {
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .gradient-button:hover {
-      opacity: 0.9;
-    }
-body.dark-mode .navbar .navbar-brand {
-  color: #007bff !important;  /* Bootstrap blue */
-}
-
-
-    .dark-mode .gradient-button {
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-    }
-  </style>
-  <style>
-.custom-toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #28a745;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 9999;
-}
-.custom-toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-</style>
-
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top px-3 py-2">
-  <a class="navbar-brand font-weight-bold text-primary" href="{% url 'orders:index' %}" style="font-size: 1.5rem;">FoodHub</a>
-
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain"
-    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarMain">
-    {% if user.is_authenticated %}
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item"><a class="nav-link" href="/#menu">Menu</a></li>
-      <li class="nav-item"><a class="nav-link" href="/#directions">Directions</a></li>
-      <li class="nav-item"><a class="nav-link" href="/#hours">Hours</a></li>
-      <li class="nav-item"><a class="nav-link" href="/#contact">Contact Us</a></li>
-    </ul>
-
-    <!-- Right-side controls -->
-    <div class="d-flex align-items-center ml-lg-3 mt-2 mt-lg-0">
-      <button class="btn btn-outline-secondary btn-sm mr-2" id="themeToggleBtn">
-        <i class="fa fa-sun-o"></i>
-      </button>
-      <a href="/view-orders" class="btn btn-outline-primary btn-sm mr-2">View Orders</a>
-      <a href="/cart" class="btn btn-outline-primary btn-sm mr-2">
-        <i class="fa fa-shopping-cart"></i> My Cart
-      </a>
-      <a href="{% url 'orders:logout' %}" class="btn gradient-button btn-sm">Logout</a>
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
     </div>
-    {% endif %}
-  </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-header">
+                <h3>Navigation</h3>
+                <button class="close-mobile-menu" id="closeMobileMenu">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="mobile-nav-links">
+                <a href="/#menu" class="mobile-nav-link">
+                    <i class="fa fa-utensils"></i>
+                    <span>Menu</span>
+                </a>
+                <a href="/#why-foodhub" class="mobile-nav-link">
+                    <i class="fa fa-star"></i>
+                    <span>Why FoodHub</span>
+                </a>
+                <a href="/#directions" class="mobile-nav-link">
+                    <i class="fa fa-map-marker"></i>
+                    <span>Directions</span>
+                </a>
+                <a href="/#contact" class="mobile-nav-link">
+                    <i class="fa fa-envelope"></i>
+                    <span>Contact Us</span>
+                </a>
+            </div>
+            {% endif %}
+            
+            <!-- Mobile Action Buttons - Always show theme toggle -->
+            <div class="mobile-action-buttons">
+                <!-- Mobile Theme Toggle - Always visible -->
+                <button class="mobile-action-btn theme-toggle-mobile" id="themeToggleMobile">
+                    <i class="fa fa-moon-o"></i>
+                    <span>Dark Mode</span>
+                </button>
+                
+                {% if user.is_authenticated %}
+                <a href="/view_orders" class="mobile-action-btn">
+                    <i class="fa fa-list-alt"></i>
+                    <span>View Orders</span>
+                </a>
+                <a href="/cart" class="mobile-action-btn">
+                    <i class="fa fa-shopping-bag"></i>
+                    <span>My Cart (<span class="mobile-cart-count">0</span>)</span>
+                </a>
+                <a href="{% url 'orders:logout' %}" class="mobile-action-btn logout">
+                    <i class="fa fa-sign-out"></i>
+                    <span>Logout</span>
+                </a>
+                {% else %}
+                <a href="{% url 'orders:login' %}" class="mobile-action-btn logout">
+                    <i class="fa fa-sign-in"></i>
+                    <span>Login</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </nav>
 
-<!-- Page-specific content -->
-<div class="container mt-4">
-  {% block content %}
-  {% endblock %}
-</div>
+<style>
+    /* Reset and base styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-<!-- REQUIRED JS FILES FOR BOOTSTRAP FUNCTIONALITY -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    /* Universal Dark Mode Styles - Applied to ALL pages */
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --card-bg: #ffffff;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --theme-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    :root.dark-mode,
+    body.dark-mode {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #475569;
+        --card-bg: #334155;
+        --gradient-primary: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+
+    /* Global dark mode transitions */
+    * {
+        transition: var(--theme-transition) !important;
+    }
+
+    /* Body and background */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: var(--theme-transition);
+    }
+
+    body.dark-mode {
+        background-color: #0f172a !important;
+        color: #f1f5f9 !important;
+    }
+
+    /* Hero sections */
+    body.dark-mode .hero,
+    body.dark-mode .hero-section {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    }
+
+    body.dark-mode .hero-title,
+    body.dark-mode .hero-subtitle,
+    body.dark-mode .page-title {
+        background: linear-gradient(45deg, #60a5fa, #a78bfa) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+    }
+
+    /* Cards and containers */
+    body.dark-mode .card,
+    body.dark-mode .pasta-card,
+    body.dark-mode .sub-card,
+    body.dark-mode .salad-card,
+    body.dark-mode .platter-card,
+    body.dark-mode .menu-card,
+    body.dark-mode .order-summary-card,
+    body.dark-mode .cart-items-section,
+    body.dark-mode .orders-table-section,
+    body.dark-mode .page-header {
+        background: var(--card-bg) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+
+    body.dark-mode .card:hover,
+    body.dark-mode .pasta-card:hover,
+    body.dark-mode .sub-card:hover,
+    body.dark-mode .salad-card:hover,
+    body.dark-mode .platter-card:hover {
+        background: #3f4a5c !important;
+        border-color: #60a5fa !important;
+    }
+
+    /* Text elements */
+    body.dark-mode .pasta-name,
+    body.dark-mode .sub-name,
+    body.dark-mode .salad-name,
+    body.dark-mode .platter-name,
+    body.dark-mode .item-name,
+    body.dark-mode .section-title,
+    body.dark-mode .section-subtitle,
+    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+    body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+        color: var(--text-primary) !important;
+    }
+
+    body.dark-mode .pasta-description,
+    body.dark-mode .sub-description,
+    body.dark-mode .salad-description,
+    body.dark-mode .platter-description,
+    body.dark-mode .item-description,
+    body.dark-mode .item-price,
+    body.dark-mode p {
+        color: var(--text-secondary) !important;
+    }
+
+    /* Buttons */
+    body.dark-mode .price-btn,
+    body.dark-mode .checkout-btn,
+    body.dark-mode .deliver-btn {
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+        border-color: transparent !important;
+    }
+
+    body.dark-mode .price-btn:hover,
+    body.dark-mode .checkout-btn:hover,
+    body.dark-mode .deliver-btn:hover {
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
+    }
+
+    /* Tables */
+    body.dark-mode .modern-table {
+        background: var(--card-bg) !important;
+    }
+
+    body.dark-mode .modern-table th {
+        background: var(--bg-secondary) !important;
+        color: var(--text-secondary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    body.dark-mode .modern-table td {
+        color: var(--text-secondary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    body.dark-mode .modern-table tbody tr:hover {
+        background: #3f4a5c !important;
+    }
+
+    /* Status badges */
+    body.dark-mode .status-badge.delivered {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+    }
+
+    body.dark-mode .status-badge.pending {
+        background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%) !important;
+    }
+
+    /* Forms and inputs */
+    body.dark-mode input,
+    body.dark-mode textarea,
+    body.dark-mode select {
+        background: var(--bg-secondary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    body.dark-mode input:focus,
+    body.dark-mode textarea:focus,
+    body.dark-mode select:focus {
+        border-color: #60a5fa !important;
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+    }
+
+    /* Page backgrounds */
+    body.dark-mode .pasta-page,
+    body.dark-mode .cart-page,
+    body.dark-mode .orders-page,
+    body.dark-mode .subs-page,
+    body.dark-mode .salad-page,
+    body.dark-mode .platter-page {
+        background: var(--gradient-primary) !important;
+    }
+
+    /* Modern Navbar Styles */
+    .modern-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        z-index: 1000;
+        transition: var(--theme-transition);
+    }
+
+    .modern-navbar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+            rgba(99, 102, 241, 0.03) 0%, 
+            rgba(168, 85, 247, 0.03) 50%, 
+            rgba(236, 72, 153, 0.03) 100%);
+        pointer-events: none;
+    }
+
+    .navbar-container {
+        max-width: 1400px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    /* Brand Section */
+    .brand-section {
+        flex-shrink: 0;
+    }
+
+    .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .brand-logo:hover {
+        transform: scale(1.05);
+    }
+
+    .logo-icon {
+        position: relative;
+        width: 42px;
+        height: 42px;
+    }
+
+    .logo-shape {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .logo-shape::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 6px;
+        opacity: 0.9;
+    }
+
+    .logo-accent {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 14px;
+        height: 14px;
+        background: linear-gradient(135deg, #f59e0b, #ef4444);
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+    }
+
+    .brand-text {
+        font-size: 1.75rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #1f2937 0%, #4f46e5 50%, #7c3aed 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+    }
+
+    /* Navigation Section */
+    .nav-section {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 2.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav-item {
+        position: relative;
+    }
+
+    .nav-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        font-size: 0.95rem;
+        border-radius: 10px;
+        transition: var(--theme-transition);
+        overflow: hidden;
+    }
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+        opacity: 0;
+        transform: scale(0.8);
+        transition: var(--theme-transition);
+        border-radius: 10px;
+    }
+
+    .nav-link:hover::before {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .nav-link:hover {
+        color: #4f46e5;
+        transform: translateY(-2px);
+    }
+
+    .link-text {
+        position: relative;
+        z-index: 2;
+    }
+
+    .link-underline {
+        position: absolute;
+        bottom: 6px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #6366f1, #a855f7);
+        border-radius: 2px;
+        transition: var(--theme-transition);
+        transform: translateX(-50%);
+    }
+
+    .nav-link:hover .link-underline {
+        width: 80%;
+    }
+
+    /* Action Section */
+    .action-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-shrink: 0;
+    }
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        cursor: pointer;
+        transition: var(--theme-transition);
+        position: relative;
+        overflow: hidden;
+        background: transparent;
+    }
+
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: currentColor;
+        opacity: 0;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 12px;
+    }
+
+    .action-btn:hover::before {
+        opacity: 0.1;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .theme-toggle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        color: #6b7280;
+        position: relative;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .theme-toggle:hover {
+        color: #4f46e5;
+        background: rgba(79, 70, 229, 0.1);
+    }
+
+    .theme-icon {
+        position: relative;
+        font-size: 1.1rem;
+    }
+
+    .dark-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .light-icon {
+        transition: opacity 0.3s ease;
+    }
+
+    .secondary-btn {
+        color: #6b7280;
+        border: 1.5px solid #e5e7eb;
+    }
+
+    .secondary-btn:hover {
+        color: #4f46e5;
+        border-color: #4f46e5;
+        background: rgba(79, 70, 229, 0.05);
+    }
+
+    .cart-btn {
+        color: #059669;
+        border: 1.5px solid #d1fae5;
+        background: rgba(5, 150, 105, 0.05);
+        position: relative;
+    }
+
+    .cart-btn:hover {
+        background: rgba(5, 150, 105, 0.1);
+        border-color: #059669;
+    }
+
+    .cart-icon-wrapper {
+        position: relative;
+    }
+
+    .cart-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: linear-gradient(135deg, #ef4444, #f97316);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 10px;
+        min-width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        animation: pulse-badge 2s infinite;
+    }
+
+    @keyframes pulse-badge {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .primary-btn {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    }
+
+    .primary-btn:hover {
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        transform: translateY(-3px);
+    }
+
+    .primary-btn::before {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        padding: 8px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: var(--theme-transition);
+    }
+
+    .hamburger-line {
+        width: 24px;
+        height: 2px;
+        background: #374151;
+        border-radius: 2px;
+        transition: var(--theme-transition);
+    }
+
+    .mobile-menu-toggle:hover {
+        background: rgba(99, 102, 241, 0.1);
+    }
+
+    .mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* Mobile Menu Overlay */
+    .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--theme-transition);
+    }
+
+    .mobile-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mobile-menu-content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 320px;
+        height: 100%;
+        background: white;
+        padding: 2rem;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+    }
+
+    .mobile-menu-overlay.active .mobile-menu-content {
+        transform: translateX(0);
+    }
+
+    .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .mobile-menu-header h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .close-mobile-menu {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        transition: var(--theme-transition);
+    }
+
+    .close-mobile-menu:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+
+    .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .mobile-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        border-radius: 12px;
+        transition: var(--theme-transition);
+        border: 1px solid transparent;
+    }
+
+    .mobile-nav-link:hover {
+        background: rgba(99, 102, 241, 0.05);
+        border-color: rgba(99, 102, 241, 0.2);
+        color: #4f46e5;
+    }
+
+    .mobile-action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .mobile-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        border-radius: 12px;
+        transition: var(--theme-transition);
+        border: 2px solid #e5e7eb;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .mobile-action-btn:hover {
+        border-color: #4f46e5;
+        color: #4f46e5;
+        background: rgba(79, 70, 229, 0.05);
+    }
+
+    .mobile-action-btn.logout {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        color: white;
+        border-color: transparent;
+    }
+
+    .mobile-action-btn.logout:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    .theme-toggle-mobile {
+        justify-content: flex-start;
+    }
+
+    .theme-toggle-mobile i {
+        transition: var(--theme-transition);
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode .modern-navbar {
+        background: rgba(15, 23, 42, 0.85);
+        border-bottom-color: rgba(30, 41, 59, 0.5);
+    }
+
+    body.dark-mode .modern-navbar::before {
+        background: linear-gradient(135deg, 
+            rgba(99, 102, 241, 0.05) 0%, 
+            rgba(168, 85, 247, 0.05) 50%, 
+            rgba(236, 72, 153, 0.05) 100%);
+    }
+
+    body.dark-mode .brand-text {
+        background: linear-gradient(135deg, #f1f5f9 0%, #8b5cf6 50%, #ec4899 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    body.dark-mode .nav-link {
+        color: #cbd5e1;
+    }
+
+    body.dark-mode .nav-link:hover {
+        color: #a855f7;
+    }
+
+    body.dark-mode .hamburger-line {
+        background: #cbd5e1;
+    }
+
+    body.dark-mode .theme-toggle .light-icon {
+        opacity: 0;
+    }
+
+    body.dark-mode .theme-toggle .dark-icon {
+        opacity: 1;
+    }
+
+    body.dark-mode .theme-toggle:hover {
+        color: #a855f7;
+        background: rgba(168, 85, 247, 0.1);
+    }
+
+    body.dark-mode .secondary-btn {
+        color: #94a3b8;
+        border-color: #334155;
+    }
+
+    body.dark-mode .secondary-btn:hover {
+        color: #a855f7;
+        border-color: #a855f7;
+        background: rgba(168, 85, 247, 0.1);
+    }
+
+    body.dark-mode .cart-btn {
+        border-color: rgba(5, 150, 105, 0.3);
+        background: rgba(5, 150, 105, 0.1);
+    }
+
+    body.dark-mode .mobile-menu-content {
+        background: #1e293b;
+    }
+
+    body.dark-mode .mobile-menu-header {
+        border-bottom-color: #334155;
+    }
+
+    body.dark-mode .mobile-menu-header h3 {
+        color: #f1f5f9;
+    }
+
+    body.dark-mode .mobile-nav-link,
+    body.dark-mode .mobile-action-btn {
+        color: #cbd5e1;
+        border-color: #334155;
+    }
+
+    body.dark-mode .mobile-nav-link:hover,
+    body.dark-mode .mobile-action-btn:hover {
+        color: #a855f7;
+        border-color: #a855f7;
+        background: rgba(168, 85, 247, 0.1);
+    }
+
+    body.dark-mode .theme-toggle-mobile {
+        color: #cbd5e1;
+    }
+
+    body.dark-mode .theme-toggle-mobile:hover {
+        color: #a855f7;
+    }
+
+    body.dark-mode .theme-toggle-mobile i {
+        color: inherit;
+    }
+
+    /* Scroll Effect */
+    .modern-navbar.scrolled {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border-bottom-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark-mode .modern-navbar.scrolled {
+        background: rgba(15, 23, 42, 0.95);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .navbar-container {
+            padding: 0 1.5rem;
+        }
+        
+        .nav-menu {
+            gap: 1.5rem;
+        }
+        
+        .action-section {
+            gap: 0.75rem;
+        }
+        
+        .action-btn span {
+            display: none;
+        }
+        
+        .action-btn {
+            padding: 10px 12px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .nav-section {
+            display: none;
+        }
+        
+        /* Always show action section for theme toggle */
+        .action-section {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        /* Show only theme toggle on mobile, hide other buttons */
+        .action-section .secondary-btn,
+        .action-section .cart-btn,
+        .action-section .primary-btn {
+            display: none;
+        }
+
+        .action-section .theme-toggle {
+            display: flex;
+        }
+        
+        .mobile-menu-toggle {
+            display: flex;
+        }
+        
+        .navbar-container {
+            padding: 0 1rem;
+        }
+        
+        .brand-text {
+            font-size: 1.5rem;
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .mobile-menu-content {
+            width: 100%;
+        }
+    }
+</style>
 
 <script>
-  const btn = document.getElementById("themeToggleBtn");
-  btn.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
-  });
-
-  window.onload = () => {
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark-mode");
+// Enhanced Global Theme System with Universal Coverage
+class UniversalThemeManager {
+    constructor() {
+        this.isInitialized = false;
+        this.init();
     }
-  }
+
+    init() {
+        // Prevent multiple initializations
+        if (this.isInitialized) return;
+        
+        // Apply theme immediately on load
+        this.loadSavedTheme();
+        
+        // Set up theme toggle buttons (desktop and mobile)
+        this.setupThemeToggle();
+        
+        // Listen for theme changes from other tabs/pages
+        this.setupCrossTabSync();
+        
+        // Apply theme to all elements
+        this.applyThemeToAllElements();
+        
+        // Update mobile theme toggle text
+        this.updateMobileToggleText();
+        
+        this.isInitialized = true;
+        
+        console.log('Universal Theme Manager initialized');
+    }
+
+    loadSavedTheme() {
+        const savedTheme = localStorage.getItem('foodhub-theme') || 'light';
+        if (savedTheme === 'dark') {
+            this.enableDarkMode();
+        } else {
+            this.enableLightMode();
+        }
+    }
+
+    setupThemeToggle() {
+        // Desktop theme toggle
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.toggleTheme();
+            });
+        }
+
+        // Mobile theme toggle
+        const themeToggleMobile = document.getElementById('themeToggleMobile');
+        if (themeToggleMobile) {
+            themeToggleMobile.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.toggleTheme();
+            });
+        }
+    }
+
+    toggleTheme() {
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        
+        if (isDarkMode) {
+            this.enableLightMode();
+        } else {
+            this.enableDarkMode();
+        }
+        
+        // Save preference
+        localStorage.setItem('foodhub-theme', isDarkMode ? 'light' : 'dark');
+        
+        // Notify other components
+        this.broadcastThemeChange(!isDarkMode);
+        
+        // Update UI elements
+        this.updateMobileToggleText();
+        
+        console.log(`Theme switched to: ${isDarkMode ? 'light' : 'dark'} mode`);
+    }
+
+    enableDarkMode() {
+        document.body.classList.add('dark-mode');
+        document.documentElement.classList.add('dark-mode');
+        this.applyThemeToAllElements();
+    }
+
+    enableLightMode() {
+        document.body.classList.remove('dark-mode');
+        document.documentElement.classList.remove('dark-mode');
+        this.applyThemeToAllElements();
+    }
+
+    updateMobileToggleText() {
+        const mobileToggle = document.getElementById('themeToggleMobile');
+        if (mobileToggle) {
+            const isDark = document.body.classList.contains('dark-mode');
+            const icon = mobileToggle.querySelector('i');
+            const text = mobileToggle.querySelector('span');
+            
+            if (icon && text) {
+                if (isDark) {
+                    icon.className = 'fa fa-sun-o';
+                    text.textContent = 'Light Mode';
+                } else {
+                    icon.className = 'fa fa-moon-o';
+                    text.textContent = 'Dark Mode';
+                }
+            }
+        }
+    }
+
+    broadcastThemeChange(isDark) {
+        // Custom event for same-page components
+        document.dispatchEvent(new CustomEvent('themeChanged', {
+            detail: { theme: isDark ? 'dark' : 'light' }
+        }));
+        
+        // Storage event for cross-tab sync
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: 'foodhub-theme',
+            newValue: isDark ? 'dark' : 'light',
+            oldValue: isDark ? 'light' : 'dark'
+        }));
+    }
+
+    setupCrossTabSync() {
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'foodhub-theme') {
+                if (e.newValue === 'dark') {
+                    this.enableDarkMode();
+                } else {
+                    this.enableLightMode();
+                }
+                this.updateMobileToggleText();
+            }
+        });
+    }
+
+    applyThemeToAllElements() {
+        // Force update of any dynamic elements
+        const isDark = document.body.classList.contains('dark-mode');
+        
+        // Update any notifications, modals, or dynamic content
+        setTimeout(() => {
+            this.updateDynamicElements(isDark);
+        }, 50);
+    }
+
+    updateDynamicElements(isDark) {
+        // Update any notifications, modals, or dynamic content
+        const selectors = [
+            '.toast', '.notification', '.modal', '.dropdown',
+            '.popup', '.overlay', '.tooltip', '.menu-dropdown'
+        ];
+        
+        selectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                if (isDark) {
+                    el.classList.add('dark-mode');
+                } else {
+                    el.classList.remove('dark-mode');
+                }
+            });
+        });
+    }
+
+    // Public method to get current theme
+    getCurrentTheme() {
+        return document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    }
+
+    // Public method to set theme programmatically
+    setTheme(theme) {
+        if (theme === 'dark') {
+            this.enableDarkMode();
+        } else {
+            this.enableLightMode();
+        }
+        localStorage.setItem('foodhub-theme', theme);
+        this.updateMobileToggleText();
+    }
+}
+
+// Initialize theme manager immediately
+let universalThemeManager;
+
+// Ensure theme is applied before DOM is fully loaded
+(function() {
+    const savedTheme = localStorage.getItem('foodhub-theme');
+    if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        document.body.classList.add('dark-mode');
+    }
+})();
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    universalThemeManager = new UniversalThemeManager();
+    
+    // Make it globally available
+    window.themeManager = universalThemeManager;
+    
+    // Also initialize other navbar functionality
+    initializeNavbarFunctionality();
+});
+
+// Fallback initialization
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!universalThemeManager) {
+            universalThemeManager = new UniversalThemeManager();
+            window.themeManager = universalThemeManager;
+        }
+    });
+} else {
+    universalThemeManager = new UniversalThemeManager();
+    window.themeManager = universalThemeManager;
+}
+
+// Navbar functionality
+function initializeNavbarFunctionality() {
+    // Mobile menu functionality
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+    function openMobileMenu() {
+        if (mobileMenuToggle && mobileMenuOverlay) {
+            mobileMenuToggle.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeMobileMenuFunc() {
+        if (mobileMenuToggle && mobileMenuOverlay) {
+            mobileMenuToggle.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', openMobileMenu);
+    }
+
+    if (closeMobileMenu) {
+        closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+    }
+
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', (e) => {
+            if (e.target === mobileMenuOverlay) {
+                closeMobileMenuFunc();
+            }
+        });
+    }
+
+    // Close mobile menu when clicking nav links
+    document.querySelectorAll('.mobile-nav-link, .mobile-action-btn:not(.theme-toggle-mobile)').forEach(link => {
+        link.addEventListener('click', closeMobileMenuFunc);
+    });
+
+    // Navbar scroll effect
+    let lastScrollY = window.scrollY;
+    const navbar = document.querySelector('.modern-navbar');
+
+    window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+        
+        if (navbar) {
+            if (currentScrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+        
+        lastScrollY = currentScrollY;
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target && navbar) {
+                const navbarHeight = navbar.offsetHeight;
+                const targetPosition = target.offsetTop - navbarHeight - 20;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Add loading animation to buttons
+    document.querySelectorAll('.action-btn:not(.theme-toggle), .mobile-action-btn:not(.theme-toggle-mobile)').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.5);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+            `;
+            
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+
+    // Initialize cart count
+    updateCartCount();
+}
+
+// Universal cart count updater for all pages
+function updateCartCount() {
+    try {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        
+        // Update all possible cart count selectors
+        const selectors = [
+            '.cart-badge', 
+            '.cart-count', 
+            '#cart-count',
+            '[data-cart-count]',
+            '.cart-number',
+            '.mobile-cart-count'
+        ];
+        
+        selectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (element) {
+                    element.textContent = totalItems;
+                    // Hide badge if cart is empty
+                    if (totalItems === 0) {
+                        element.style.display = 'none';
+                    } else {
+                        element.style.display = 'inline-flex';
+                    }
+                }
+            });
+        });
+        
+        console.log(`Cart count updated: ${totalItems} items`);
+    } catch (error) {
+        console.error('Error updating cart count:', error);
+    }
+}
+
+// Update cart count when localStorage changes (for cross-tab updates)
+window.addEventListener('storage', function(e) {
+    if (e.key === 'cart') {
+        updateCartCount();
+    }
+});
+
+// Make functions globally available
+window.updateCartCount = updateCartCount;
+window.initializeNavbarFunctionality = initializeNavbarFunctionality;
+
+// Add CSS animation for ripple effect
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
 </script>
 
-</body>
-</html>
+{% block content %}
+{% endblock %}

@@ -23,9 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'i0&iq&e9u9h6(4_7%pt2s9)f=c$kso=k$c$w@fi9215s=1q0^d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+]
 
 TINYMCE_DEFAULT_CONFIG = {
     'height': 360,
@@ -148,8 +152,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+# In settings.py
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static'),
-   ]
+    os.path.join(BASE_DIR, 'orders/static'),
+]
+
+# For development
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

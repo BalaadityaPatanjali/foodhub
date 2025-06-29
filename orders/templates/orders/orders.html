@@ -3,100 +3,902 @@
 
 {% block content %}
 
-<div class="container-fluid">
-  <div class="row justify-content-center">
-    {% if user.is_superuser %}
-    {% else %}
-      <h2 class="text-center font-weight-bold"> Orders by: {{ user.get_username }} </h2>
-    {% endif %}
+<style>
+/* Orders Page Styles */
+.orders-page {
+    padding-top: 120px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding-bottom: 4rem;
+}
 
-    <table class="table table-hover mt-4">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col">Order ID</th>
-          <th scope="col">Ordered by</th>
-          <th scope="col">Date</th>
-          <th scope="col">Order</th>
-          <th scope="col">Amount Paid</th>
-          <th scope="col">Delivered</th>
-        </tr>
-      </thead>
-      <tbody id="orders_table">
-        {% for row in rows %}
-        <tr class="{% if row.delivered %}table-success{% else %}table-danger{% endif %}" id="order-row-{{ row.id }}">
-          <td>{{ row.id }}</td>
-          <td>{{ row.username }}</td>
-          <td>{{ row.time_of_order }}</td>
-          <td>
-            <ul>
-              {% for item in row.order|format_cart %}
-              <li>{{ item|format_cart_item }}</li>
-              {% endfor %}
-            </ul>
-          </td>
-          <td>£{{ row.price }}</td>
-          <td>
-            {% if not row.delivered %}
-              <button class="btn btn-sm btn-outline-success" onclick="markDelivered({{ row.id }})">Delivered</button>
-            {% else %}
-              <span class="badge badge-success">Done</span>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Page Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.page-title i {
+    color: #6366f1;
+}
+
+.page-subtitle {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.admin-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-left: 1rem;
+}
+
+/* Stats Section */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-icon.total {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.stat-icon.pending {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.stat-icon.delivered {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Orders Table Section */
+.orders-table-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.table-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    color: #64748b;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    border-color: #6366f1;
+    color: #6366f1;
+    background: #f8fafc;
+}
+
+/* Modern Table */
+.modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.modern-table thead {
+    background: #f8fafc;
+}
+
+.modern-table th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.modern-table th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.modern-table th:last-child {
+    border-top-right-radius: 12px;
+}
+
+.modern-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.modern-table tbody tr:hover {
+    background: #fafbfc;
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.modern-table td {
+    padding: 1.5rem;
+    color: #374151;
+    vertical-align: top;
+}
+
+/* Order ID Badge */
+.order-id {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+/* Customer Info */
+.customer-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.customer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.customer-details h6 {
+    margin: 0;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+}
+
+.customer-details small {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+/* Date Formatting */
+.order-date {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.order-time {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+/* Order Items */
+.order-items {
+    max-width: 300px;
+}
+
+.order-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.order-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #374151;
+    transition: all 0.3s ease;
+}
+
+.order-item:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.order-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Price Display */
+.order-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #059669;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.order-price::before {
+    content: "£";
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* Status and Actions */
+.order-status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-badge.delivered {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.status-badge.pending {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.deliver-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.deliver-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.deliver-btn:active {
+    transform: translateY(0);
+}
+
+.deliver-btn.loading {
+    background: #cbd5e1;
+    cursor: not-allowed;
+}
+
+/* Empty State */
+.empty-orders {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #64748b;
+}
+
+.empty-orders i {
+    font-size: 4rem;
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+}
+
+.empty-orders h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.empty-orders p {
+    margin-bottom: 2rem;
+}
+
+.start-ordering-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.start-ordering-btn:hover {
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+}
+
+/* Notification Toast */
+.toast {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    background: #10b981;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast.error {
+    background: #ef4444;
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .modern-table {
+        font-size: 0.9rem;
+    }
+    
+    .modern-table td {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .orders-page {
+        padding-top: 100px;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .admin-badge {
+        margin-left: 0;
+    }
+    
+    .stats-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-buttons {
+        justify-content: center;
+    }
+    
+    /* Mobile Table - Card View */
+    .orders-table-section {
+        padding: 1rem;
+    }
+    
+    .modern-table,
+    .modern-table thead,
+    .modern-table tbody,
+    .modern-table th,
+    .modern-table td,
+    .modern-table tr {
+        display: block;
+    }
+    
+    .modern-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    .modern-table tr {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modern-table td {
+        border: none;
+        padding: 0.5rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .modern-table td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #64748b;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .order-items {
+        max-width: none;
+        width: 100%;
+    }
+    
+    .order-status {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .orders-table-section {
+        padding: 0.75rem;
+        margin: 0 0.5rem;
+    }
+    
+    .modern-table tr {
+        padding: 0.75rem;
+    }
+}
+</style>
+
+<div class="orders-page">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-clipboard-list"></i>
+                {% if user.is_superuser %}
+                    All Orders Dashboard
+                    <span class="admin-badge">
+                        <i class="fas fa-crown"></i>
+                        Admin
+                    </span>
+                {% else %}
+                    My Orders
+                {% endif %}
+            </h1>
+            <p class="page-subtitle">
+                {% if user.is_superuser %}
+                    Manage all customer orders and track delivery status
+                {% else %}
+                    Track your orders and view order history
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section" id="statsSection">
+            <div class="stat-card">
+                <div class="stat-icon total">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-value" id="pendingOrders">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon delivered">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value" id="deliveredOrders">0</div>
+                <div class="stat-label">Delivered</div>
+            </div>
+        </div>
+
+        <!-- Orders Table Section -->
+        <div class="orders-table-section">
+            <div class="table-header">
+                <h3 class="table-title">Order History</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Orders</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="delivered">Delivered</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                {% if rows %}
+                <table class="modern-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Date & Time</th>
+                            <th>Order Items</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr class="order-row" data-status="{% if row.delivered %}delivered{% else %}pending{% endif %}" id="order-row-{{ row.id }}">
+                            <td data-label="Order ID">
+                                <span class="order-id">#{{ row.id }}</span>
+                            </td>
+                            <td data-label="Customer">
+                                <div class="customer-info">
+                                    <div class="customer-avatar">
+                                        {{ row.username|first|upper }}
+                                    </div>
+                                    <div class="customer-details">
+                                        <h6>{{ row.username|capfirst }}</h6>
+                                        <small>Customer</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-label="Date & Time">
+                                <div class="order-date">{{ row.time_of_order|date:"M d, Y" }}</div>
+                                <div class="order-time">{{ row.time_of_order|time:"g:i A" }}</div>
+                            </td>
+                            <td data-label="Order Items">
+                                <div class="order-items">
+                                    <ul class="order-items-list">
+                                        {% for item in row.order|format_cart %}
+                                        <li class="order-item">{{ item|format_cart_item }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </td>
+                            <td data-label="Amount">
+                                <span class="order-price">{{ row.price }}</span>
+                            </td>
+                            <td data-label="Status">
+                                <div class="order-status">
+                                    {% if row.delivered %}
+                                        <span class="status-badge delivered">
+                                            <i class="fas fa-check"></i>
+                                            Delivered
+                                        </span>
+                                    {% else %}
+                                        <span class="status-badge pending">
+                                            <i class="fas fa-clock"></i>
+                                            Pending
+                                        </span>
+                                        {% if user.is_superuser %}
+                                        <button class="deliver-btn" onclick="markDelivered({{ row.id }})">
+                                            <i class="fas fa-truck"></i>
+                                            Mark Delivered
+                                        </button>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-orders">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>No orders yet</h3>
+                    <p>{% if user.is_superuser %}No customer orders have been placed yet.{% else %}You haven't placed any orders yet.{% endif %}</p>
+                    {% if not user.is_superuser %}
+                    <a href="/" class="start-ordering-btn">
+                        <i class="fas fa-utensils"></i>
+                        Start Ordering
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Success!</span>
 </div>
 
 <script>
-  function markDelivered(orderId) {
-    const row = document.getElementById(`order-row-${orderId}`);
-    if (row) {
-      row.classList.remove('table-danger');
-      row.classList.add('table-success');
-      const buttonCell = row.querySelector('td:last-child');
-      buttonCell.innerHTML = '<span class="badge badge-success">Done</span>';
+// Enhanced Orders Management System
+class OrdersManager {
+    constructor() {
+        this.init();
     }
-    // You can also send a fetch POST request here to update order delivery status in backend
-  }
-</script>
-<script>
-  function markDelivered(orderId) {
-    fetch(`/mark-delivered/${orderId}/`, {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': getCookie('csrftoken'),
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ delivered: true })
-    })
-    .then(response => {
-      if (response.ok) {
-        const row = document.getElementById(`order-row-${orderId}`);
-        row.classList.remove('table-danger');
-        row.classList.add('table-success');
-        const buttonCell = row.querySelector('td:last-child');
-        buttonCell.innerHTML = '<span class="badge badge-success">Done</span>';
-      }
-    });
 
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
+    init() {
+        this.updateStats();
+        this.bindEvents();
+    }
+
+    updateStats() {
+        const rows = document.querySelectorAll('.order-row');
+        const totalOrders = rows.length;
+        const pendingOrders = document.querySelectorAll('.order-row[data-status="pending"]').length;
+        const deliveredOrders = document.querySelectorAll('.order-row[data-status="delivered"]').length;
+
+        // Animate count up
+        this.animateValue('totalOrders', 0, totalOrders, 1000);
+        this.animateValue('pendingOrders', 0, pendingOrders, 1200);
+        this.animateValue('deliveredOrders', 0, deliveredOrders, 1400);
+    }
+
+    animateValue(elementId, start, end, duration) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const startTimestamp = performance.now();
+        const step = (timestamp) => {
+            const elapsed = timestamp - startTimestamp;
+            const progress = Math.min(elapsed / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            element.textContent = value;
+            
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            }
+        };
+        requestAnimationFrame(step);
+    }
+
+    bindEvents() {
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.filterOrders(e.target.dataset.filter));
+        });
+    }
+
+    filterOrders(filter) {
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+
+        // Filter rows
+        const rows = document.querySelectorAll('.order-row');
+        rows.forEach(row => {
+            if (filter === 'all' || row.dataset.status === filter) {
+                row.style.display = '';
+                // Add fade-in animation
+                row.style.opacity = '0';
+                setTimeout(() => row.style.opacity = '1', 100);
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        
+        toastMessage.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+}
+
+// Mark Delivered Function
+async function markDelivered(orderId) {
+    const button = document.querySelector(`#order-row-${orderId} .deliver-btn`);
+    const row = document.getElementById(`order-row-${orderId}`);
+    
+    if (!button || !row) return;
+
+    // Show loading state
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    button.classList.add('loading');
+    button.disabled = true;
+
+    try {
+        const response = await fetch(`/mark_delivered/${orderId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ delivered: true })
+        });
+
+        if (response.ok) {
+            // Update row status
+            row.dataset.status = 'delivered';
+            
+            // Update status badge
+            const statusCell = row.querySelector('.order-status');
+            statusCell.innerHTML = `
+                <span class="status-badge delivered">
+                    <i class="fas fa-check"></i>
+                    Delivered
+                </span>
+            `;
+
+            // Update stats
+            ordersManager.updateStats();
+            
+            // Show success message
+            ordersManager.showToast('Order marked as delivered successfully!');
+            
+            // Add celebration animation
+            row.style.transform = 'scale(1.05)';
+            setTimeout(() => row.style.transform = 'scale(1)', 300);
+            
+        } else {
+            throw new Error('Failed to update order status');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        ordersManager.showToast('Error updating order status. Please try again.', 'error');
+        
+        // Restore button
+        button.innerHTML = originalText;
+        button.classList.remove('loading');
+        button.disabled = false;
+    }
+}
+
+// Get CSRF Token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
         }
-      }
-      return cookieValue;
     }
-  }
-</script>
+    return cookieValue;
+}
 
+// Initialize Orders Manager
+let ordersManager;
+document.addEventListener('DOMContentLoaded', () => {
+    ordersManager = new OrdersManager();
+    
+    // Add smooth scrolling to page
+    document.documentElement.style.scrollBehavior = 'smooth';
+});
+
+// Add hover effects to table rows
+document.addEventListener('DOMContentLoaded', () => {
+    const rows = document.querySelectorAll('.order-row');
+    rows.forEach(row => {
+        row.addEventListener('mouseenter', () => {
+            row.style.transform = 'translateX(4px)';
+        });
+        
+        row.addEventListener('mouseleave', () => {
+            row.style.transform = 'translateX(0)';
+        });
+    });
+});
+</script>
 
 {% endblock %}
