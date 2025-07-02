@@ -140,7 +140,7 @@ if (typeof window.pizza_toppings === 'undefined') {
         } else {
             // Fallback: add pizza without toppings
             const item = {
-                item_description: `${sizeType} Pizza - ${pizzaName}`,
+                item_description: `${sizeType} ${pizzaName} Pizza`,
                 price: parseFloat(price),
                 image_url: "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"
             };
