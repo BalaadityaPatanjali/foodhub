@@ -2,298 +2,101 @@
 {% load static %}
 
 {% block content %}
-<script src="{% static 'orders/js/base.js' %}"></script>
-
-<style>
-    /* Fix for banner cutting - add top padding */
-    .pasta-page {
-        padding-top: 100px;
-        min-height: 100vh;
-        background: #f8fafc;
-    }
-
-    /* Hero section */
-    .hero {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        text-align: center;
-        padding: 4rem 2rem;
-        margin-bottom: 3rem;
-    }
-
-    .hero h1 {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        font-weight: 700;
-    }
-
-    .hero p {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-        opacity: 0.9;
-    }
-
-    .hero-stats {
-        display: flex;
-        justify-content: center;
-        gap: 3rem;
-        margin-top: 2rem;
-        flex-wrap: wrap;
-    }
-
-    .stat {
-        text-align: center;
-    }
-
-    .stat-value {
-        font-size: 1.1rem;
-        font-weight: 600;
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-        opacity: 0.8;
-    }
-
-    /* Main content */
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 3rem 2rem;
-    }
-
-    .section-title {
-        text-align: center;
-        font-size: 2.5rem;
-        color: #333;
-        margin-bottom: 1rem;
-        font-weight: 700;
-    }
-
-    .section-subtitle {
-        text-align: center;
-        font-size: 1.5rem;
-        color: #333;
-        margin-bottom: 3rem;
-        font-weight: 600;
-    }
-
-    /* Pasta cards grid */
-    .pasta-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
-    }
-
-    .pasta-card {
-        background: white;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        position: relative;
-    }
-
-    .pasta-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-    }
-
-    .pasta-image {
-        width: 100%;
-        height: 250px;
-        background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
-        position: relative;
-        overflow: hidden;
-        background-image: url("{% static 'orders/pasta.jpg' %}");
-        background-size: cover;
-        background-position: center;
-    }
-
-    .pasta-image::before {
-        content: "🍝";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 4rem;
-        opacity: 0.8;
-    }
-
-    .pasta-tag {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        background: rgba(102, 126, 234, 0.9);
-        color: white;
-        padding: 0.3rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-
-    .pasta-info {
-        padding: 1.5rem;
-    }
-
-    .pasta-name {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #333;
-        margin-bottom: 0.5rem;
-    }
-
-    .pasta-description {
-        color: #666;
-        margin-bottom: 1.5rem;
-        line-height: 1.5;
-    }
-
-    .pasta-price {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .price-btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 0.8rem 2rem;
-        border-radius: 25px;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    .price-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    .price-btn:active {
-        transform: translateY(0);
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .pasta-page {
-            padding-top: 80px;
-        }
-        
-        .hero h1 {
-            font-size: 2rem;
-        }
-
-        .hero-stats {
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .pasta-grid {
-            grid-template-columns: 1fr;
-            padding: 0 1rem;
-        }
-
-        .container {
-            padding: 2rem 1rem;
-        }
-    }
-</style>
-
-<!-- Main wrapper with proper padding -->
-<div class="pasta-page">
+<!-- Quick Fix Pasta Page with Working Cart -->
+<div class="pasta-page" style="padding-top: 100px; min-height: 100vh; background: #f8fafc;">
     <!-- Hero Section -->
-    <section class="hero">
-        <h1>🍝 Choose Your Perfect Pasta 🍝</h1>
-        <p>Authentic Italian recipes made with the finest ingredients, served fresh daily</p>
-        <div class="hero-stats">
-            <div class="stat">
-                <div class="stat-value">Fresh Made</div>
-                <div class="stat-label">Daily</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">15-20 min</div>
-                <div class="stat-label">Prep Time</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">4.9/5 Rating</div>
-                <div class="stat-label">Customer Reviews</div>
-            </div>
-        </div>
+    <section class="hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 4rem 2rem; margin-bottom: 3rem;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem; font-weight: 700;">🍝 Choose Your Perfect Pasta 🍝</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">Authentic Italian recipes made with the finest ingredients, served fresh daily</p>
     </section>
 
     <!-- Main Content -->
-    <div class="container">
-        <h2 class="section-title">Pasta Menu</h2>
-        <h3 class="section-subtitle">Pasta Menu</h3>
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 3rem 2rem;">
+        <h2 style="text-align: center; font-size: 2.5rem; color: #333; margin-bottom: 3rem; font-weight: 700;">Pasta Menu</h2>
 
-        <div class="pasta-grid">
-            <!-- Dynamic pasta dishes from database -->
+        <div class="pasta-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 2rem;">
             {% for dish in dishes %}
-            <div class="pasta-card">
-                <div class="pasta-image">
-                    <div class="pasta-tag">{{ dish.category|default:"Popular" }}</div>
+            <div class="pasta-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease; position: relative;">
+                <div class="pasta-image" style="width: 100%; height: 250px; background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); position: relative; overflow: hidden;">
+                    {% if dish.dish_name == "Baked Ziti w/Mozzarella" %}
+    <img src="https://www.seriouseats.com/thmb/EfnCajGPFPE8TPZhiXAmg6lcEk4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__images__2014__09__20140922-baked-ziti-vicky-wasik-25-024122d5fd8542da895b1be9af658358.jpg"
+         alt="Baked Ziti w/Mozzarella" style="width:100%;height:100%;object-fit:cover;">
+{% elif dish.dish_name == "Baked Ziti w/Meatballs" %}
+    <img src="https://assets-us-01.kc-usercontent.com/4353bced-f940-00d0-8c6e-13a0a4a7f5c2/74e76f15-52f6-47b1-bb2d-245e9ccb438d/Baked-Ziti-Meatballs_700x700.jpeg?w=1280&auto=format"
+         alt="Baked Ziti w/Meatballs" style="width:100%;height:100%;object-fit:cover;">
+{% elif dish.dish_name == "Baked Ziti w/Chicken" %}
+    <img src="https://krollskorner.com/wp-content/uploads/2020/02/CHICKENPARMKKedits_blog02-1024x1536.jpg"
+         alt="Baked Ziti w/Chicken" style="width:100%;height:100%;object-fit:cover;">
+{% else %}
+    <img src="https://cdn.pixabay.com/photo/2017/05/07/08/56/pasta-2290810_1280.jpg"
+         alt="{{ dish.dish_name }}" style="width:100%;height:100%;object-fit:cover;">
+{% endif %}
+
+                    <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(102, 126, 234, 0.9); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Popular</div>
                 </div>
-                <div class="pasta-info">
-                    <h3 class="pasta-name">{{ dish.name }}</h3>
-                    <p class="pasta-description">{{ dish.description|default:"Delicious pasta with authentic flavors" }}</p>
-                    <div class="pasta-price">
-                        <button type="button" class="price-btn"
-                            onclick='add_to_cart({"item_description": "Pasta - {{ dish.name }}", "price": {{ dish.price }}, "image_url": "{% static "orders/pasta.jpg" %}"})'>
-                            £{{ dish.price }}
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">{{ dish.dish_name }}</h3>
+                    <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.5;">{{ dish.description|default:"Delicious pasta with authentic flavors" }}</p>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <button type="button" class="pasta-btn"
+                                onclick='addPastaToCart("Pasta - {{ dish.dish_name }}", {{ dish.price }})'
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0.8rem 2rem; border-radius: 25px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            ${{ dish.price }}
                         </button>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <!-- Static pasta dishes (fallback if no dishes in database) -->
-            <div class="pasta-card">
-                <div class="pasta-image">
-                    <div class="pasta-tag">Creamy</div>
+            <!-- Static pasta dishes (fallback) -->
+            <div class="pasta-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                <div class="pasta-image" style="width: 100%; height: 250px; background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); position: relative;">
+                    <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(102, 126, 234, 0.9); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Creamy</div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; opacity: 0.8;">🍝</div>
                 </div>
-                <div class="pasta-info">
-                    <h3 class="pasta-name">Alfredo</h3>
-                    <p class="pasta-description">Rich and creamy pasta with butter, heavy cream, and fresh parmesan</p>
-                    <div class="pasta-price">
-                        <button type="button" class="price-btn"
-                            onclick='add_to_cart({"item_description": "Pasta - Alfredo", "price": 13.95, "image_url": "{% static "orders/pasta.jpg" %}"})'>
-                            £13.95
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Alfredo</h3>
+                    <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.5;">Rich and creamy pasta with butter, heavy cream, and fresh parmesan</p>
+                    <div style="display: flex; justify-content: center;">
+                        <button type="button" class="pasta-btn"
+                                onclick='addPastaToCart("Pasta - Alfredo", 13.95)'
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0.8rem 2rem; border-radius: 25px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            $13.95
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="pasta-card">
-                <div class="pasta-image">
-                    <div class="pasta-tag">Spicy</div>
+            <div class="pasta-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                <div class="pasta-image" style="width: 100%; height: 250px; background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); position: relative;">
+                    <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(102, 126, 234, 0.9); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Spicy</div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; opacity: 0.8;">🍝</div>
                 </div>
-                <div class="pasta-info">
-                    <h3 class="pasta-name">Arrabbiata</h3>
-                    <p class="pasta-description">Spicy tomato sauce with garlic, red peppers, and fresh herbs</p>
-                    <div class="pasta-price">
-                        <button type="button" class="price-btn"
-                            onclick='add_to_cart({"item_description": "Pasta - Arrabbiata", "price": 12.95, "image_url": "{% static "orders/pasta.jpg" %}"})'>
-                            £12.95
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Arrabbiata</h3>
+                    <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.5;">Spicy tomato sauce with garlic, red peppers, and fresh herbs</p>
+                    <div style="display: flex; justify-content: center;">
+                        <button type="button" class="pasta-btn"
+                                onclick='addPastaToCart("Pasta - Arrabbiata", 12.95)'
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0.8rem 2rem; border-radius: 25px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            $12.95
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="pasta-card">
-                <div class="pasta-image">
-                    <div class="pasta-tag">Simple</div>
+            <div class="pasta-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                <div class="pasta-image" style="width: 100%; height: 250px; background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); position: relative;">
+                    <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(102, 126, 234, 0.9); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Simple</div>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; opacity: 0.8;">🍝</div>
                 </div>
-                <div class="pasta-info">
-                    <h3 class="pasta-name">Aglio e Olio</h3>
-                    <p class="pasta-description">Classic Italian pasta with garlic, olive oil, and red pepper flakes</p>
-                    <div class="pasta-price">
-                        <button type="button" class="price-btn"
-                            onclick='add_to_cart({"item_description": "Pasta - Aglio e Olio", "price": 11.95, "image_url": "{% static "orders/pasta.jpg" %}"})'>
-                            £11.95
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #333; margin-bottom: 0.5rem;">Aglio e Olio</h3>
+                    <p style="color: #666; margin-bottom: 1.5rem; line-height: 1.5;">Classic Italian pasta with garlic, olive oil, and red pepper flakes</p>
+                    <div style="display: flex; justify-content: center;">
+                        <button type="button" class="pasta-btn"
+                                onclick='addPastaToCart("Pasta - Aglio e Olio", 11.95)'
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0.8rem 2rem; border-radius: 25px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            $11.95
                         </button>
                     </div>
                 </div>
@@ -303,121 +106,111 @@
     </div>
 </div>
 
+<!-- Success Notification Toast -->
+<div id="pasta-toast" style="position: fixed; top: 120px; right: 20px; background: #667eea; color: white; padding: 1rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3); z-index: 10001; transform: translateX(100%); transition: transform 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+    <i class="fas fa-check-circle"></i>
+    <span id="pasta-message">Pasta added to cart!</span>
+</div>
+
+<style>
+/* Pasta-specific styles */
+.pasta-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.pasta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.pasta-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .pasta-page { padding-top: 80px; }
+    .hero h1 { font-size: 2rem; }
+    .pasta-grid { grid-template-columns: 1fr; padding: 0 1rem; }
+    .container { padding: 2rem 1rem; }
+}
+</style>
+
 <script>
-// Copy the working cart functionality from pizza.html
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🍝 Pasta page loaded - initializing cart functions...');
-    
-    // Initialize cart functions
-    initializeCartFunctions();
-});
-
-function initializeCartFunctions() {
-    console.log('Initializing cart functions...');
-    
-    // Enhanced add_to_cart function (copied from working pizza.html)
-    window.add_to_cart = function(item) {
-        try {
-            console.log('Adding to cart:', item);
-            
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            
-            const cartItem = {
-                item_description: item.item_description || 'Unknown Item',
-                price: parseFloat(item.price) || 0,
-                image_url: item.image_url || "{% static 'orders/pasta.jpg' %}",
-                quantity: 1,
-                toppings: item.toppings || []
-            };
-            
-            // Check if item already exists
-            const existingIndex = cart.findIndex(existing => 
-                existing.item_description === cartItem.item_description
-            );
-            
-            if (existingIndex !== -1) {
-                cart[existingIndex].quantity += 1;
-            } else {
-                cart.push(cartItem);
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            
-            // Show notification
-            showSuccessNotification(`${cartItem.item_description} added to cart!`);
-            
-            console.log('✅ Successfully added to cart');
-            
-        } catch (error) {
-            console.error('❌ Error adding to cart:', error);
-            showErrorNotification('Could not add item to cart. Please try again.');
+// Working Cart Functions for Pasta
+function addPastaToCart(description, price) {
+    try {
+        console.log('Adding pasta to cart:', description, price);
+        
+        // Get existing cart
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        
+        // Create cart item
+        const cartItem = {
+            item_description: description,
+            price: parseFloat(price),
+            image_url: "{% static 'orders/pasta.jpg' %}",
+            quantity: 1,
+            category: 'pasta'
+        };
+        
+        // Check if item already exists
+        const existingIndex = cart.findIndex(existing => 
+            existing.item_description === cartItem.item_description
+        );
+        
+        if (existingIndex !== -1) {
+            // Update quantity if item exists
+            cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+            showPastaNotification(`Quantity updated for ${description}!`);
+        } else {
+            // Add new item
+            cart.push(cartItem);
+            showPastaNotification(`${description} added to cart!`);
         }
-    };
-    
-    // Fix all existing pasta buttons
-    fixPastaButtons();
-}
-
-function fixPastaButtons() {
-    console.log('🔧 Fixing pasta buttons...');
-    
-    // Find all buttons with onclick attributes
-    const buttons = document.querySelectorAll('button[onclick]');
-    console.log(`Found ${buttons.length} buttons with onclick`);
-    
-    buttons.forEach((button, index) => {
-        const onclickCode = button.getAttribute('onclick');
-        if (onclickCode) {
-            console.log(`Button ${index}:`, onclickCode);
-            
-            // Remove onclick and add event listener
-            button.removeAttribute('onclick');
-            
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                console.log('Button clicked:', onclickCode);
-                
-                try {
-                    // Parse and execute the onclick code
-                    if (onclickCode.includes('add_to_cart')) {
-                        executeAddToCart(onclickCode);
-                    }
-                } catch (error) {
-                    console.error('Error executing button click:', error);
-                }
-            });
-        }
-    });
-}
-
-function executeAddToCart(onclickCode) {
-    // Extract JSON from add_to_cart call
-    const match = onclickCode.match(/add_to_cart\(\s*({[^}]+})\s*\)/);
-    if (match) {
-        try {
-            // Clean up the JSON string
-            let jsonStr = match[1]
-                .replace(/'/g, '"')
-                .replace(/(\w+):/g, '"$1":');
-            
-            const item = JSON.parse(jsonStr);
-            window.add_to_cart(item);
-        } catch (e) {
-            console.error('Error parsing add_to_cart JSON:', e);
-        }
+        
+        // Save cart and update count
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updatePastaCartCount();
+        
+        // Visual feedback on button
+        const clickedButton = event.target;
+        const originalText = clickedButton.textContent;
+        clickedButton.textContent = 'Added!';
+        clickedButton.style.background = '#10ac84';
+        
+        setTimeout(() => {
+            clickedButton.textContent = originalText;
+            clickedButton.style.background = '';
+        }, 1000);
+        
+        console.log('✅ Pasta successfully added to cart');
+        
+    } catch (error) {
+        console.error('❌ Error adding pasta to cart:', error);
+        showPastaNotification('Error adding pasta to cart', 'error');
     }
 }
 
-function updateCartCount() {
+function updatePastaCartCount() {
     try {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
         
-        // Update cart badge
-        const cartBadges = document.querySelectorAll('.cart-badge, .cart-count, #cart-count');
-        cartBadges.forEach(badge => {
-            if (badge) badge.textContent = totalItems;
+        // Update all cart count elements
+        const selectors = ['.cart-badge', '.cart-count', '#cart-count', '.mobile-cart-count'];
+        selectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (element) {
+                    element.textContent = totalItems;
+                    if (totalItems > 0) {
+                        element.style.display = 'inline-flex';
+                    } else {
+                        element.style.display = 'none';
+                    }
+                }
+            });
         });
         
         console.log(`Cart count updated: ${totalItems} items`);
@@ -426,140 +219,47 @@ function updateCartCount() {
     }
 }
 
-function showSuccessNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 120px;
-        right: 20px;
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-        z-index: 10001;
-        font-weight: 500;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        max-width: 300px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    `;
+function showPastaNotification(message, type = 'success') {
+    const toast = document.getElementById('pasta-toast');
+    const messageEl = document.getElementById('pasta-message');
     
-    notification.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => notification.style.transform = 'translateX(0)', 100);
-    setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-function showErrorNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 120px;
-        right: 20px;
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
-        z-index: 10001;
-        font-weight: 500;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        max-width: 300px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    `;
-    
-    notification.innerHTML = `
-        <i class="fas fa-exclamation-circle"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => notification.style.transform = 'translateX(0)', 100);
-    setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-// Add some interactive animations
-document.querySelectorAll('.pasta-card').forEach(card => {
-    card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-8px) scale(1.02)';
-    });
-    
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'translateY(0) scale(1)';
-    });
-});
-
-// Add visual feedback to buttons
-document.querySelectorAll('.price-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const originalText = this.textContent;
-        this.textContent = 'Added!';
-        this.style.background = '#10ac84';
+    if (toast && messageEl) {
+        messageEl.textContent = message;
         
+        // Set color based on type
+        if (type === 'error') {
+            toast.style.background = '#ef4444';
+            toast.querySelector('i').className = 'fas fa-exclamation-circle';
+        } else {
+            toast.style.background = '#667eea';
+            toast.querySelector('i').className = 'fas fa-check-circle';
+        }
+        
+        // Show notification
+        toast.style.transform = 'translateX(0)';
+        
+        // Hide after 3 seconds
         setTimeout(() => {
-            this.textContent = originalText;
-            this.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        }, 1000);
-    });
+            toast.style.transform = 'translateX(100%)';
+        }, 3000);
+    }
+}
+
+// Initialize cart count on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updatePastaCartCount();
+    console.log('🍝 Pasta page loaded with working cart functions');
 });
 
-// Update cart count on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateCartCount();
-});
-</script>
-<script>
-// Initialize dark mode for this specific page
-document.addEventListener('DOMContentLoaded', function() {
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.documentElement.classList.add('dark-mode');
+// Update cart count on storage changes (for cross-tab updates)
+window.addEventListener('storage', function(e) {
+    if (e.key === 'cart') {
+        updatePastaCartCount();
     }
-    
-    // Listen for theme changes
-    document.addEventListener('themeChanged', function(e) {
-        if (e.detail.theme === 'dark') {
-            document.body.classList.add('dark-mode');
-            document.documentElement.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-            document.documentElement.classList.remove('dark-mode');
-        }
-    });
-    
-    // Listen for cross-tab changes
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'theme') {
-            if (e.newValue === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.documentElement.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-                document.documentElement.classList.remove('dark-mode');
-            }
-        }
-    });
 });
 </script>
+
+<!-- Load your existing base.js for compatibility -->
+<script src="{% static 'orders/js/base.js' %}"></script>
 
 {% endblock %}

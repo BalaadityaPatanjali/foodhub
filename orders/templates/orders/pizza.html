@@ -2,1190 +2,198 @@
 {% load static %}
 
 {% block content %}
-<!-- Fixed Pizza Selection Page -->
-<div class="pizza-page" style="padding-top: 100px; min-height: 100vh; background: #f8fafc;">
+<!-- Fixed Pizza Page with Working Cart (Following Pasta Pattern) -->
+<div class="pizza-page" style="padding-top: 100px; min-height: 100vh; background: var(--bg-primary, #f8fafc); transition: all 0.3s ease;">
     <!-- Hero Section -->
-    <div class="hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 3rem 0; margin-bottom: 3rem; text-align: center;">
-        <div class="hero-content" style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
-            <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2;">
-                🍕 Choose Your Perfect Pizza 🍕
-            </h1>
-            <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 2rem;">
-                Handcrafted with the finest ingredients, made fresh daily
-            </p>
-            <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
-                    <i class="fas fa-fire"></i>
-                    <span>Fresh Baked</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
-                    <i class="fas fa-clock"></i>
-                    <span>15-20 min</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
-                    <i class="fas fa-star"></i>
-                    <span>4.9/5 Rating</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <section class="hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 4rem 2rem; margin-bottom: 3rem;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem; font-weight: 700;">🍕 Choose Your Perfect Pizza 🍕</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">Handcrafted with the finest ingredients, made fresh daily</p>
+    </section>
 
-    <!-- Pizza Type Selection -->
-    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; margin-bottom: 3rem;">
-        <h2 style="font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 2rem; color: #1e293b;">
-            Select Pizza Style
-        </h2>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
-            <!-- Regular Pizza Card -->
-            <div class="pizza-type-card" id="regular_pizza_card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; cursor: pointer; border: 3px solid transparent;">
-                <div style="height: 200px; overflow: hidden;">
-                    <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=300&fit=crop" alt="Regular Pizza" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div style="padding: 1.5rem;">
-                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #1e293b;">Regular Pizza</h3>
-                    <p style="color: #64748b; margin-bottom: 1rem;">Classic thin crust with traditional Italian flavors. Perfect balance of crispy and chewy texture.</p>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <span style="background: rgba(99, 102, 241, 0.1); color: #4f46e5; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">Thin Crust</span>
-                        <span style="background: rgba(99, 102, 241, 0.1); color: #4f46e5; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">Classic</span>
+    <!-- Main Content -->
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 3rem 2rem;">
+        <h2 style="text-align: center; font-size: 2.5rem; color: var(--text-primary, #333); margin-bottom: 3rem; font-weight: 700;">Pizza Menu</h2>
+
+        <!-- Regular Pizza Section -->
+        <div class="pizza-section" style="margin-bottom: 3rem;">
+            <h3 style="font-size: 2rem; color: var(--text-primary, #333); margin-bottom: 2rem; text-align: center;">Regular Pizza</h3>
+            <div class="pizza-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                {% for pizza in regular_pizza %}
+                <div class="pizza-card" style="background: var(--card-bg, white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px var(--shadow-color, rgba(0,0,0,0.1)); transition: all 0.3s ease; position: relative; border: 1px solid var(--border-color, transparent);">
+                    <div class="pizza-image" style="width: 100%; height: 250px; background: linear-gradient(45deg, #667eea 0%, #764ba2 50%, #667eea 100%); position: relative; overflow: hidden;">
+{% if pizza.pizza_choice == "Cheese" %}
+    <img src="https://cdn.pixabay.com/photo/2016/04/21/22/50/pizza-1344720_1280.jpg"
+         alt="Cheese Pizza" style="width:100%;height:100%;object-fit:cover;">
+{% elif pizza.pizza_choice == "1 topping" %}
+    <img src="https://cdn.pixabay.com/photo/2020/04/01/16/34/pepperoni-4991789_1280.jpg"
+         alt="1-topping Pizza" style="width:100%;height:100%;object-fit:cover;">
+{% elif pizza.pizza_choice == "2 Toppings" %}
+    <img src="https://cdn.pixabay.com/photo/2022/08/02/07/30/pizza-7359753_1280.jpg"
+         alt="2-topping Pizza" style="width:100%;height:100%;object-fit:cover;">
+{% else %}
+    <img src="https://cdn.pixabay.com/photo/2020/02/09/08/54/pizza-4835869_1280.jpg"
+         alt="{{ pizza.pizza_choice }}" style="width:100%;height:100%;object-fit:cover;">
+{% endif %}
+
+                        <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(102, 126, 234, 0.9); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Regular</div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Sicilian Pizza Card -->
-            <div class="pizza-type-card" id="sicillian_pizza_card" style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; cursor: pointer; border: 3px solid transparent;">
-                <div style="height: 200px; overflow: hidden;">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="Sicilian Pizza" style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div style="padding: 1.5rem;">
-                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #1e293b;">Sicilian Pizza</h3>
-                    <p style="color: #64748b; margin-bottom: 1rem;">Thick, airy crust with bold flavors. Generous toppings on a fluffy, focaccia-like base.</p>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <span style="background: rgba(5, 150, 105, 0.1); color: #059669; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">Thick Crust</span>
-                        <span style="background: rgba(5, 150, 105, 0.1); color: #059669; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">Hearty</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pizza Menu Section -->
-    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
-        <div style="background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <h2 id="selected-type-text" style="font-size: 2rem; font-weight: 700; color: #1e293b;">
-                    Select a pizza style above
-                </h2>
-            </div>
-
-            <!-- Regular Pizza Menu -->
-            <div id="regular-menu" style="display: none;">
-                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: #1e293b; text-align: center;">Regular Pizza Menu</h3>
-                
-                <!-- Grid View -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                    {% for pizza in regular_pizza %}
-                    <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease; border: 1px solid #e2e8f0;">
-                        <div style="height: 180px; overflow: hidden; position: relative;">
-                            <img src="https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg" alt="{{ pizza.pizza_choice }}" style="width: 100%; height: 100%; object-fit: cover;">
-                            <div style="position: absolute; top: 0.75rem; left: 0.75rem; background: #6366f1; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Regular</div>
-                        </div>
-                        <div style="padding: 1.25rem;">
-                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #1e293b;">{{ pizza.pizza_choice }}</h4>
-                            <p style="color: #64748b; margin-bottom: 1rem; font-size: 0.9rem;">Delicious {{ pizza.pizza_choice|lower }} with authentic flavors</p>
-                            <div style="display: flex; gap: 0.75rem;">
-                                <div style="flex: 1; text-align: center;">
-                                    <span style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 0.25rem; font-weight: 500;">Small</span>
-                                    {% if forloop.counter0 in number_of_toppings %}
-                                        <button onclick="pizza_toppings({{ forloop.counter0 }}, 'Small Regular', {{ pizza.small_price }}, '{{ pizza.pizza_choice }}')" style="width: 100%; padding: 0.75rem; border: 2px solid #dbeafe; border-radius: 10px; background: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; color: #2563eb;">
-                                            ${{ pizza.small_price }}
-                                        </button>
-                                    {% else %}
-                                        <button onclick='add_to_cart({"item_description": "Small Regular Pizza - {{ pizza.pizza_choice }}", "price": {{ pizza.small_price }}, "image_url": "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"})' style="width: 100%; padding: 0.75rem; border: 2px solid #dbeafe; border-radius: 10px; background: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; color: #2563eb;">
-                                            ${{ pizza.small_price }}
-                                        </button>
-                                    {% endif %}
-                                </div>
-                                <div style="flex: 1; text-align: center;">
-                                    <span style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 0.25rem; font-weight: 500;">Large</span>
-                                    {% if forloop.counter0 in number_of_toppings %}
-                                        <button onclick="pizza_toppings({{ forloop.counter0 }}, 'Large Regular', {{ pizza.large_price }}, '{{ pizza.pizza_choice }}')" style="width: 100%; padding: 0.75rem; border: 2px solid #d1fae5; border-radius: 10px; background: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; color: #059669;">
-                                            ${{ pizza.large_price }}
-                                        </button>
-                                    {% else %}
-                                        <button onclick='add_to_cart({"item_description": "Large Regular Pizza - {{ pizza.pizza_choice }}", "price": {{ pizza.large_price }}, "image_url": "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"})' style="width: 100%; padding: 0.75rem; border: 2px solid #d1fae5; border-radius: 10px; background: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; color: #059669;">
-                                            ${{ pizza.large_price }}
-                                        </button>
-                                    {% endif %}
-                                </div>
+                    <div style="padding: 1.5rem;">
+                        <h3 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary, #333); margin-bottom: 0.5rem;">{{ pizza.pizza_choice }}</h3>
+                        <p style="color: var(--text-secondary, #666); margin-bottom: 1.5rem; line-height: 1.5;">Delicious {{ pizza.pizza_choice|lower }} with authentic flavors</p>
+                        <div style="display: flex; gap: 1rem; justify-content: center;">
+                            <div style="flex: 1; text-align: center;">
+                                <span style="display: block; font-size: 0.8rem; color: var(--text-secondary, #666); margin-bottom: 0.5rem; font-weight: 600;">Small</span>
+                                <button type="button" class="pizza-btn"
+                                        onclick='addPizzaToCart("Small {{ pizza.pizza_choice }}", {{ pizza.small_price }})'
+                                        style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                                    ${{ pizza.small_price }}
+                                </button>
+                            </div>
+                            <div style="flex: 1; text-align: center;">
+                                <span style="display: block; font-size: 0.8rem; color: var(--text-secondary, #666); margin-bottom: 0.5rem; font-weight: 600;">Large</span>
+                                <button type="button" class="pizza-btn"
+                                        onclick='addPizzaToCart("Large {{ pizza.pizza_choice }}", {{ pizza.large_price }})'
+                                        style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                                    ${{ pizza.large_price }}
+                                </button>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-            </div>
-
-            <!-- Sicilian Pizza Menu -->
-            <div id="sicillian-menu" style="display: none;">
-                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: #1e293b; text-align: center;">Sicilian Pizza Menu</h3>
-                
-                <!-- Grid View -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                    {% for pizza in sicillian_pizza %}
-                    <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease; border: 1px solid #e2e8f0;">
-                        <div style="height: 180px; overflow: hidden; position: relative;">
-                            <img src="https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg" alt="{{ pizza.pizza_choice }}" style="width: 100%; height: 100%; object-fit: cover;">
-                            <div style="position: absolute; top: 0.75rem; left: 0.75rem; background: #059669; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Sicilian</div>
-                        </div>
-                        <div style="padding: 1.25rem;">
-                            <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #1e293b;">{{ pizza.pizza_choice }}</h4>
-                            <p style="color: #64748b; margin-bottom: 1rem; font-size: 0.9rem;">Hearty {{ pizza.pizza_choice|lower }} on thick, fluffy crust</p>
-                            <div style="display: flex; gap: 0.75rem;">
-                                <div style="flex: 1; text-align: center;">
-                                    <span style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 0.25rem; font-weight: 500;">Small</span>
-                                    {% if forloop.counter0 in number_of_toppings %}
-                                        <button onclick="pizza_toppings({{ forloop.counter0 }}, 'Small Sicillian', {{ pizza.small_price }}, '{{ pizza.pizza_choice }}')" style="width: 100%; padding: 0.75rem; border: 2px solid #dbeafe; border-radius: 10px; background: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; color: #2563eb;">
-                                            ${{ pizza.small_price }}
-                                        </button>
-                                    {% else %}
-                                        <button onclick='add_to_cart({"item_description": "Small Sicillian Pizza - {{ pizza.pizza_choice }}", "price": {{ pizza.small_price }}, "image_url": "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"})' style="width: 100%; padding: 0.75rem; border: 2px solid #dbeafe; border-radius: 10px; background: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; color: #2563eb;">
-                                            ${{ pizza.small_price }}
-                                        </button>
-                                    {% endif %}
-                                </div>
-                                <div style="flex: 1; text-align: center;">
-                                    <span style="display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 0.25rem; font-weight: 500;">Large</span>
-                                    {% if forloop.counter0 in number_of_toppings %}
-                                        <button onclick="pizza_toppings({{ forloop.counter0 }}, 'Large Sicillian', {{ pizza.large_price }}, '{{ pizza.pizza_choice }}')" style="width: 100%; padding: 0.75rem; border: 2px solid #d1fae5; border-radius: 10px; background: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; color: #059669;">
-                                            ${{ pizza.large_price }}
-                                        </button>
-                                    {% else %}
-                                        <button onclick='add_to_cart({"item_description": "Large Sicillian Pizza - {{ pizza.pizza_choice }}", "price": {{ pizza.large_price }}, "image_url": "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"})' style="width: 100%; padding: 0.75rem; border: 2px solid #d1fae5; border-radius: 10px; background: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; color: #059669;">
-                                            ${{ pizza.large_price }}
-                                        </button>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
         </div>
-    </div>
+
+
+<!-- Success Notification Toast -->
+<div id="pizza-toast" style="position: fixed; top: 120px; right: 20px; background: #667eea; color: white; padding: 1rem 1.5rem; border-radius: 12px; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3); z-index: 10001; transform: translateX(100%); transition: transform 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+    <i class="fas fa-check-circle"></i>
+    <span id="pizza-message">Pizza added to cart!</span>
 </div>
-
-<!-- Enhanced Toppings Modal -->
-<div class="modal-overlay" id="toppings_modal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease;">
-    <div class="modal-container" style="background: white; border-radius: 20px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); transform: scale(0.9); transition: transform 0.3s ease;">
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid #f1f5f9;">
-            <h3 style="display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0;">
-                <i class="fas fa-plus-circle"></i>
-                Customize Your Pizza
-            </h3>
-            <button id="close-modal" style="width: 40px; height: 40px; border: none; background: #f8fafc; border-radius: 50%; color: #64748b; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div style="padding: 2rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
-                <div>
-                    <h4 id="pizza-name" style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0 0 0.25rem 0;">Pizza Name</h4>
-                    <p id="pizza-details" style="color: #64748b; font-size: 0.9rem; margin: 0;">Size • Type</p>
-                </div>
-                <div style="font-size: 1.1rem; font-weight: 600; color: #059669;">
-                    Base: $<span id="base-price">0.00</span>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 2rem;">
-                <h4 style="display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; color: #1e293b; margin-bottom: 1.5rem;">
-                    <i class="fas fa-leaf"></i>
-                    Choose Your Toppings
-                </h4>
-                <div id="toppings-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                    {% for topping in toppings %}
-                    <div class="topping-item" data-topping="{{ topping }}" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 2px solid #f1f5f9; border-radius: 12px; cursor: pointer; transition: all 0.3s ease;">
-                        <div>
-                            <input type="checkbox" id="topping_{{ forloop.counter }}" value="{{ topping }}" style="display: none;">
-                            <label for="topping_{{ forloop.counter }}" style="display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: 2px solid #d1d5db; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; background: white;">
-                                <i class="fas fa-check" style="font-size: 0.8rem; opacity: 0; transition: opacity 0.3s ease; color: white;"></i>
-                            </label>
-                        </div>
-                        <div style="flex: 1; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 500; color: #374151;">{{ topping }}</span>
-                            <span style="font-weight: 600; color: #059669; font-size: 0.9rem;">+$1.50</span>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>Base Pizza:</span>
-                        <span>$<span id="calc-base">0.00</span></span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>Toppings (<span id="topping-count">0</span>):</span>
-                        <span>$<span id="calc-toppings">0.00</span></span>
-                    </div>
-                    <div style="height: 1px; background: #e2e8f0; margin: 0.5rem 0;"></div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; font-weight: 700; color: #1e293b;">
-                        <span>Total:</span>
-                        <span>$<span id="calc-total">0.00</span></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div style="display: flex; gap: 1rem; padding: 1.5rem 2rem; border-top: 1px solid #f1f5f9; justify-content: flex-end;">
-            <button id="cancel-toppings" style="padding: 0.75rem 1.5rem; border: 2px solid #e5e7eb; border-radius: 10px; background: white; color: #6b7280; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">Cancel</button>
-            <button id="submit_toppings" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-            </button>
-        </div>
-    </div>
-</div>
-
-<script>
-// Working Pizza Selection System
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🍕 Pizza page loaded - initializing selection...');
-    
-    // Get pizza cards
-    const regularCard = document.getElementById('regular_pizza_card');
-    const sicillianCard = document.getElementById('sicillian_pizza_card');
-    const regularMenu = document.getElementById('regular-menu');
-    const sicillianMenu = document.getElementById('sicillian-menu');
-    const selectedTypeText = document.getElementById('selected-type-text');
-    
-    console.log('Pizza cards found:', {
-        regularCard: !!regularCard,
-        sicillianCard: !!sicillianCard,
-        regularMenu: !!regularMenu,
-        sicillianMenu: !!sicillianMenu
-    });
-    
-    // Pizza card click handlers
-    if (regularCard) {
-        regularCard.addEventListener('click', function() {
-            console.log('Regular pizza card clicked');
-            selectPizzaType('regular');
-        });
-        
-        // Add visual feedback
-        regularCard.style.cursor = 'pointer';
-        regularCard.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.15)';
-        });
-        
-        regularCard.addEventListener('mouseleave', function() {
-            if (!this.classList.contains('selected')) {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.1)';
-            }
-        });
-    }
-    
-    if (sicillianCard) {
-        sicillianCard.addEventListener('click', function() {
-            console.log('Sicilian pizza card clicked');
-            selectPizzaType('sicillian');
-        });
-        
-        // Add visual feedback
-        sicillianCard.style.cursor = 'pointer';
-        sicillianCard.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-            this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.15)';
-        });
-        
-        sicillianCard.addEventListener('mouseleave', function() {
-            if (!this.classList.contains('selected')) {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.1)';
-            }
-        });
-    }
-    
-    function selectPizzaType(type) {
-        console.log('Selecting pizza type:', type);
-        
-        // Remove selection from all cards
-        const allCards = document.querySelectorAll('.pizza-type-card');
-        allCards.forEach(card => {
-            card.classList.remove('selected');
-            card.style.borderColor = 'transparent';
-            card.style.transform = 'translateY(0)';
-            card.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.1)';
-        });
-        
-        // Select the clicked card
-        const selectedCard = type === 'regular' ? regularCard : sicillianCard;
-        if (selectedCard) {
-            selectedCard.classList.add('selected');
-            selectedCard.style.borderColor = type === 'regular' ? '#6366f1' : '#059669';
-            selectedCard.style.transform = 'translateY(-5px)';
-            selectedCard.style.boxShadow = type === 'regular' ? 
-                '0 15px 35px rgba(99, 102, 241, 0.2)' : 
-                '0 15px 35px rgba(5, 150, 105, 0.2)';
-        }
-        
-        // Show/hide menus
-        if (regularMenu && sicillianMenu) {
-            if (type === 'regular') {
-                regularMenu.style.display = 'block';
-                sicillianMenu.style.display = 'none';
-                if (selectedTypeText) selectedTypeText.textContent = 'Regular Pizza Menu';
-            } else {
-                regularMenu.style.display = 'none';
-                sicillianMenu.style.display = 'block';
-                if (selectedTypeText) selectedTypeText.textContent = 'Sicilian Pizza Menu';
-            }
-        }
-        
-        // Scroll to menu section
-        const menuSection = document.querySelector('.pizza-menu-section');
-        if (menuSection) {
-            menuSection.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
-        }
-        
-        console.log('Pizza type selected successfully');
-    }
-    
-    // Initialize cart functions
-    initializeCartFunctions();
-});
-
-function initializeCartFunctions() {
-    console.log('Initializing cart functions...');
-    
-    // Enhanced add_to_cart function
-    window.add_to_cart = function(item) {
-        try {
-            console.log('Adding to cart:', item);
-            
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            
-            const cartItem = {
-                item_description: item.item_description || 'Unknown Item',
-                price: parseFloat(item.price) || 0,
-                image_url: item.image_url || 'https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg',
-                quantity: 1,
-                toppings: item.toppings || []
-            };
-            
-            // Check if item already exists
-            const existingIndex = cart.findIndex(existing => 
-                existing.item_description === cartItem.item_description
-            );
-            
-            if (existingIndex !== -1) {
-                cart[existingIndex].quantity += 1;
-            } else {
-                cart.push(cartItem);
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            
-            // Show notification
-            showSuccessNotification(`${cartItem.item_description} added to cart!`);
-            
-            console.log('✅ Successfully added to cart');
-            
-        } catch (error) {
-            console.error('❌ Error adding to cart:', error);
-            showErrorNotification('Could not add item to cart. Please try again.');
-        }
-    };
-    
-    // Pizza toppings function
-    window.pizza_toppings = function(index, sizeType, price, pizzaName) {
-        console.log('🍕 Pizza with toppings:', {index, sizeType, price, pizzaName});
-        
-        // For now, just add pizza without toppings modal
-        // You can implement the modal later
-        const item = {
-            item_description: `${sizeType} Pizza - ${pizzaName}`,
-            price: parseFloat(price),
-            image_url: "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg"
-        };
-        window.add_to_cart(item);
-    };
-    
-    // Fix all existing pizza buttons
-    fixPizzaButtons();
-}
-
-function fixPizzaButtons() {
-    console.log('🔧 Fixing pizza buttons...');
-    
-    // Find all buttons with onclick attributes
-    const buttons = document.querySelectorAll('button[onclick]');
-    console.log(`Found ${buttons.length} buttons with onclick`);
-    
-    buttons.forEach((button, index) => {
-        const onclickCode = button.getAttribute('onclick');
-        if (onclickCode) {
-            console.log(`Button ${index}:`, onclickCode);
-            
-            // Remove onclick and add event listener
-            button.removeAttribute('onclick');
-            
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                console.log('Button clicked:', onclickCode);
-                
-                try {
-                    // Parse and execute the onclick code
-                    if (onclickCode.includes('add_to_cart')) {
-                        executeAddToCart(onclickCode);
-                    } else if (onclickCode.includes('pizza_toppings')) {
-                        executePizzaToppings(onclickCode);
-                    }
-                } catch (error) {
-                    console.error('Error executing button click:', error);
-                }
-            });
-        }
-    });
-}
-
-function executeAddToCart(onclickCode) {
-    // Extract JSON from add_to_cart call
-    const match = onclickCode.match(/add_to_cart\(\s*({[^}]+})\s*\)/);
-    if (match) {
-        try {
-            // Clean up the JSON string
-            let jsonStr = match[1]
-                .replace(/'/g, '"')
-                .replace(/(\w+):/g, '"$1":');
-            
-            const item = JSON.parse(jsonStr);
-            window.add_to_cart(item);
-        } catch (e) {
-            console.error('Error parsing add_to_cart JSON:', e);
-        }
-    }
-}
-
-function executePizzaToppings(onclickCode) {
-    // Extract parameters from pizza_toppings call
-    const match = onclickCode.match(/pizza_toppings\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*([\d.]+)\s*,\s*'([^']+)'\s*\)/);
-    if (match) {
-        const [, index, sizeType, price, pizzaName] = match;
-        window.pizza_toppings(parseInt(index), sizeType, parseFloat(price), pizzaName);
-    }
-}
-
-function updateCartCount() {
-    try {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        
-        // Update cart badge
-        const cartBadges = document.querySelectorAll('.cart-badge');
-        cartBadges.forEach(badge => {
-            if (badge) badge.textContent = totalItems;
-        });
-        
-        console.log(`Cart count updated: ${totalItems} items`);
-    } catch (error) {
-        console.error('Error updating cart count:', error);
-    }
-}
-
-function showSuccessNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-        z-index: 10001;
-        font-weight: 500;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        max-width: 300px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    `;
-    
-    notification.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => notification.style.transform = 'translateX(0)', 100);
-    setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-function showErrorNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
-        z-index: 10001;
-        font-weight: 500;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        max-width: 300px;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    `;
-    
-    notification.innerHTML = `
-        <i class="fas fa-exclamation-circle"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => notification.style.transform = 'translateX(0)', 100);
-    setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-// Update cart count on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateCartCount();
-});
-</script>
 
 <style>
-/* Additional styles for pizza selection */
-.pizza-type-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
+/* CSS Variables for Light/Dark Theme */
+:root {
+    --bg-primary: #f8fafc;
+    --card-bg: white;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --border-color: #e2e8f0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-.pizza-type-card.selected {
-    transform: translateY(-5px);
-    border: 3px solid #6366f1;
-    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2);
+.dark-mode {
+    --bg-primary: #0f172a;
+    --card-bg: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
-.pizza-type-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+/* Apply background color to page */
+.pizza-page {
+    background: var(--bg-primary) !important;
 }
 
-/* Ensure buttons are clickable */
-.price-btn, .table-price-btn {
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* Pizza-specific styles */
+.pizza-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px var(--shadow-color);
+    border-color: rgba(102, 126, 234, 0.3);
 }
 
-.price-btn:hover, .table-price-btn:hover {
+.pizza-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-</style>
-<!-- Modern Notification System -->
-<style>
-/* Notification Styles */
-.notification-container {
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    pointer-events: none;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.notification {
-    background: white;
-    border-radius: 16px;
-    padding: 16px 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    max-width: 400px;
-    min-width: 300px;
-    transform: translateX(100%);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: auto;
-    position: relative;
-    overflow: hidden;
+.pizza-btn:active {
+    transform: translateY(0);
 }
 
-.notification::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(135deg, #10b981, #059669);
-    border-radius: 2px 0 0 2px;
-}
-
-.notification.success::before {
-    background: linear-gradient(135deg, #10b981, #059669);
-}
-
-.notification.error::before {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-}
-
-.notification.warning::before {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-}
-
-.notification.info::before {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-}
-
-.notification.show {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-.notification-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-}
-
-.notification.success .notification-icon {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-}
-
-.notification.error .notification-icon {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
-}
-
-.notification.warning .notification-icon {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: white;
-}
-
-.notification.info .notification-icon {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-}
-
-.notification-content {
-    flex: 1;
-}
-
-.notification-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 2px;
-}
-
-.notification-message {
-    font-size: 13px;
-    color: #6b7280;
-    line-height: 1.4;
-}
-
-.notification-close {
-    width: 24px;
-    height: 24px;
-    border: none;
-    background: rgba(107, 114, 128, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #6b7280;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-}
-
-.notification-close:hover {
-    background: rgba(107, 114, 128, 0.2);
-    color: #374151;
-}
-
-.notification-progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #10b981, #059669);
-    border-radius: 0 0 16px 16px;
-    transform-origin: left;
-    animation: progressBar 5s linear forwards;
-}
-
-.notification.success .notification-progress {
-    background: linear-gradient(90deg, #10b981, #059669);
-}
-
-.notification.error .notification-progress {
-    background: linear-gradient(90deg, #ef4444, #dc2626);
-}
-
-.notification.warning .notification-progress {
-    background: linear-gradient(90deg, #f59e0b, #d97706);
-}
-
-.notification.info .notification-progress {
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
-}
-
-@keyframes progressBar {
-    from { transform: scaleX(1); }
-    to { transform: scaleX(0); }
-}
-
-/* Cart Item Preview in Notification */
-.cart-item-preview {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 8px;
-    padding: 8px;
-    background: #f9fafb;
-    border-radius: 8px;
-}
-
-.cart-item-preview img {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    object-fit: cover;
-}
-
-.cart-item-info {
-    flex: 1;
-}
-
-.cart-item-name {
-    font-size: 12px;
-    font-weight: 500;
-    color: #374151;
-}
-
-.cart-item-price {
-    font-size: 11px;
-    color: #10b981;
-    font-weight: 600;
-}
-
-/* Action Buttons in Notification */
-.notification-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.notification-btn {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.notification-btn.primary {
-    background: #3b82f6;
-    color: white;
-}
-
-.notification-btn.primary:hover {
-    background: #2563eb;
-}
-
-.notification-btn.secondary {
-    background: #f3f4f6;
-    color: #374151;
-}
-
-.notification-btn.secondary:hover {
-    background: #e5e7eb;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .notification-container {
-        right: 10px;
-        left: 10px;
-    }
-    
-    .notification {
-        min-width: auto;
-        max-width: none;
-    }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .notification {
-        background: #1f2937;
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .notification-title {
-        color: #f9fafb;
-    }
-    
-    .notification-message {
-        color: #d1d5db;
-    }
-    
-    .cart-item-preview {
-        background: #374151;
-    }
-    
-    .cart-item-name {
-        color: #f3f4f6;
-    }
+@media (max-width: 768px) {
+    .pizza-page { padding-top: 80px; }
+    .hero h1 { font-size: 2rem; }
+    .pizza-grid { grid-template-columns: 1fr; padding: 0 1rem; }
+    .container { padding: 2rem 1rem; }
 }
 </style>
 
 <script>
-class NotificationSystem {
-    constructor() {
-        this.container = null;
-        this.notifications = [];
-        this.createContainer();
-    }
-
-    createContainer() {
-        this.container = document.createElement('div');
-        this.container.className = 'notification-container';
-        document.body.appendChild(this.container);
-    }
-
-    show(options) {
-        const {
-            type = 'success',
-            title = '',
-            message = '',
-            duration = 5000,
-            showProgress = true,
-            actions = [],
-            itemPreview = null,
-            icon = null
-        } = options;
-
-        const notification = this.createNotification({
-            type,
-            title,
-            message,
-            duration,
-            showProgress,
-            actions,
-            itemPreview,
-            icon
-        });
-
-        this.container.appendChild(notification);
-        this.notifications.push(notification);
-
-        // Trigger animation
-        setTimeout(() => {
-            notification.classList.add('show');
-        }, 10);
-
-        // Auto remove
-        if (duration > 0) {
-            setTimeout(() => {
-                this.remove(notification);
-            }, duration);
-        }
-
-        return notification;
-    }
-
-    createNotification(options) {
-        const {
-            type,
-            title,
-            message,
-            duration,
-            showProgress,
-            actions,
-            itemPreview,
-            icon
-        } = options;
-
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-
-        // Default icons
-        const defaultIcons = {
-            success: 'fas fa-check',
-            error: 'fas fa-times',
-            warning: 'fas fa-exclamation',
-            info: 'fas fa-info',
-            cart: 'fas fa-shopping-cart'
-        };
-
-        const iconClass = icon || defaultIcons[type] || defaultIcons.success;
-
-        notification.innerHTML = `
-            <div class="notification-icon">
-                <i class="${iconClass}"></i>
-            </div>
-            <div class="notification-content">
-                ${title ? `<div class="notification-title">${title}</div>` : ''}
-                ${message ? `<div class="notification-message">${message}</div>` : ''}
-                ${itemPreview ? this.createItemPreview(itemPreview) : ''}
-                ${actions.length > 0 ? this.createActions(actions) : ''}
-            </div>
-            <button class="notification-close">
-                <i class="fas fa-times"></i>
-            </button>
-            ${showProgress && duration > 0 ? '<div class="notification-progress"></div>' : ''}
-        `;
-
-        // Add close functionality
-        const closeBtn = notification.querySelector('.notification-close');
-        closeBtn.addEventListener('click', () => {
-            this.remove(notification);
-        });
-
-        // Add action listeners
-        actions.forEach((action, index) => {
-            const actionBtn = notification.querySelector(`.notification-btn:nth-child(${index + 1})`);
-            if (actionBtn && action.onClick) {
-                actionBtn.addEventListener('click', () => {
-                    action.onClick();
-                    if (action.closeOnClick !== false) {
-                        this.remove(notification);
-                    }
-                });
-            }
-        });
-
-        return notification;
-    }
-
-    createItemPreview(item) {
-        return `
-            <div class="cart-item-preview">
-                <img src="${item.image_url || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=32&h=32&fit=crop'}" alt="${item.name}">
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-                </div>
-            </div>
-        `;
-    }
-
-    createActions(actions) {
-        const actionsHtml = actions.map(action => 
-            `<button class="notification-btn ${action.type || 'primary'}">${action.label}</button>`
-        ).join('');
-        
-        return `<div class="notification-actions">${actionsHtml}</div>`;
-    }
-
-    remove(notification) {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-            this.notifications = this.notifications.filter(n => n !== notification);
-        }, 400);
-    }
-
-    // Convenience methods
-    success(title, message, options = {}) {
-        return this.show({
-            type: 'success',
-            title,
-            message,
-            icon: 'fas fa-check-circle',
-            ...options
-        });
-    }
-
-    error(title, message, options = {}) {
-        return this.show({
-            type: 'error',
-            title,
-            message,
-            icon: 'fas fa-exclamation-circle',
-            ...options
-        });
-    }
-
-    warning(title, message, options = {}) {
-        return this.show({
-            type: 'warning',
-            title,
-            message,
-            icon: 'fas fa-exclamation-triangle',
-            ...options
-        });
-    }
-
-    info(title, message, options = {}) {
-        return this.show({
-            type: 'info',
-            title,
-            message,
-            icon: 'fas fa-info-circle',
-            ...options
-        });
-    }
-
-    // Special cart notification
-    cartAdded(item, options = {}) {
-        const cartCount = this.getCartCount();
-        
-        return this.show({
-            type: 'success',
-            title: 'Added to Cart!',
-            message: `${item.item_description} has been added to your cart`,
-            icon: 'fas fa-shopping-cart',
-            itemPreview: {
-                name: item.item_description,
-                price: item.price,
-                image_url: item.image_url
-            },
-            actions: [
-                {
-                    label: 'View Cart',
-                    type: 'primary',
-                    onClick: () => window.location.href = '/cart'
-                },
-                {
-                    label: 'Continue Shopping',
-                    type: 'secondary',
-                    onClick: () => {} // Just closes the notification
-                }
-            ],
-            duration: 6000,
-            ...options
-        });
-    }
-
-    getCartCount() {
-        try {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            return cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        } catch (e) {
-            return 0;
-        }
-    }
-}
-
-// Initialize global notification system
-window.notify = new NotificationSystem();
-
-// Enhanced add_to_cart function with notifications
-window.add_to_cart = function(item) {
+// Working Cart Functions for Pizza (Following Pasta Pattern)
+function addPizzaToCart(description, price) {
     try {
-        console.log('Adding to cart:', item);
+        console.log('Adding pizza to cart:', description, price);
         
+        // Get existing cart
         let cart = JSON.parse(localStorage.getItem('cart') || '[]');
         
+        // Create cart item
         const cartItem = {
-            item_description: item.item_description || 'Unknown Item',
-            price: parseFloat(item.price) || 0,
-            image_url: item.image_url || 'https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg',
+            item_description: description,
+            price: parseFloat(price),
+            image_url: "https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg",
             quantity: 1,
-            toppings: item.toppings || []
+            category: 'pizza'
         };
         
         // Check if item already exists
         const existingIndex = cart.findIndex(existing => 
-            existing.item_description === cartItem.item_description &&
-            JSON.stringify(existing.toppings || []) === JSON.stringify(cartItem.toppings || [])
+            existing.item_description === cartItem.item_description
         );
         
-        let isNewItem = true;
         if (existingIndex !== -1) {
-            cart[existingIndex].quantity += 1;
-            isNewItem = false;
+            // Update quantity if item exists
+            cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+            showPizzaNotification(`Quantity updated for ${description}!`);
         } else {
+            // Add new item
             cart.push(cartItem);
+            showPizzaNotification(`${description} added to cart!`);
         }
         
+        // Save cart and update count
         localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
+        updatePizzaCartCount();
         
-        // Show notification
-        if (isNewItem) {
-            window.notify.cartAdded(cartItem);
-        } else {
-            window.notify.success(
-                'Quantity Updated!',
-                `${cartItem.item_description} quantity increased in your cart`,
-                {
-                    icon: 'fas fa-plus',
-                    duration: 4000
-                }
-            );
-        }
+        // Visual feedback on button
+        const clickedButton = event.target;
+        const originalText = clickedButton.textContent;
+        clickedButton.textContent = 'Added!';
+        clickedButton.style.background = '#10ac84';
         
-        console.log('✅ Successfully added to cart');
+        setTimeout(() => {
+            clickedButton.textContent = originalText;
+            clickedButton.style.background = '';
+        }, 1000);
+        
+        console.log('✅ Pizza successfully added to cart');
         
     } catch (error) {
-        console.error('❌ Error adding to cart:', error);
-        window.notify.error(
-            'Error!',
-            'Could not add item to cart. Please try again.',
-            {
-                duration: 4000
-            }
-        );
+        console.error('❌ Error adding pizza to cart:', error);
+        showPizzaNotification('Error adding pizza to cart', 'error');
     }
-};
+}
 
-// Update cart count function
-function updateCartCount() {
+function updatePizzaCartCount() {
     try {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
         
-        const selectors = ['.cart-badge', '.cart-count', '#cart-count'];
+        // Update all cart count elements
+        const selectors = ['.cart-badge', '.cart-count', '#cart-count', '.mobile-cart-count'];
         selectors.forEach(selector => {
             const elements = document.querySelectorAll(selector);
             elements.forEach(element => {
-                if (element) element.textContent = totalItems;
+                if (element) {
+                    element.textContent = totalItems;
+                    if (totalItems > 0) {
+                        element.style.display = 'inline-flex';
+                    } else {
+                        element.style.display = 'none';
+                    }
+                }
             });
         });
         
@@ -1195,47 +203,47 @@ function updateCartCount() {
     }
 }
 
-// Auto-initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateCartCount();
-    console.log('🔔 Notification system initialized');
-});
-</script>
-<script>
-// Initialize dark mode for this specific page
-document.addEventListener('DOMContentLoaded', function() {
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.documentElement.classList.add('dark-mode');
-    }
+function showPizzaNotification(message, type = 'success') {
+    const toast = document.getElementById('pizza-toast');
+    const messageEl = document.getElementById('pizza-message');
     
-    // Listen for theme changes
-    document.addEventListener('themeChanged', function(e) {
-        if (e.detail.theme === 'dark') {
-            document.body.classList.add('dark-mode');
-            document.documentElement.classList.add('dark-mode');
+    if (toast && messageEl) {
+        messageEl.textContent = message;
+        
+        // Set color based on type
+        if (type === 'error') {
+            toast.style.background = '#ef4444';
+            toast.querySelector('i').className = 'fas fa-exclamation-circle';
         } else {
-            document.body.classList.remove('dark-mode');
-            document.documentElement.classList.remove('dark-mode');
+            toast.style.background = '#667eea';
+            toast.querySelector('i').className = 'fas fa-check-circle';
         }
-    });
-    
-    // Listen for cross-tab changes
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'theme') {
-            if (e.newValue === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.documentElement.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-                document.documentElement.classList.remove('dark-mode');
-            }
-        }
-    });
+        
+        // Show notification
+        toast.style.transform = 'translateX(0)';
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            toast.style.transform = 'translateX(100%)';
+        }, 3000);
+    }
+}
+
+// Initialize cart count on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updatePizzaCartCount();
+    console.log('🍕 Pizza page loaded with working cart functions');
+});
+
+// Update cart count on storage changes (for cross-tab updates)
+window.addEventListener('storage', function(e) {
+    if (e.key === 'cart') {
+        updatePizzaCartCount();
+    }
 });
 </script>
+
+<!-- Load your existing base.js for compatibility -->
 <script src="{% static 'orders/js/base.js' %}"></script>
 
 {% endblock %}
