@@ -404,7 +404,7 @@
     display: block;
 }
 
-/* Cart Item */
+/* Cart Item - IMPROVED */
 .cart-item {
     display: flex;
     align-items: center;
@@ -422,12 +422,14 @@
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
 }
 
+/* IMPROVED ITEM IMAGE */
 .item-image {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 12px;
     object-fit: cover;
     background: var(--hover-bg);
+    border: 2px solid var(--border-color);
 }
 
 .item-details {
@@ -453,6 +455,7 @@
     margin-top: 0.25rem;
 }
 
+/* IMPROVED QUANTITY CONTROLS */
 .quantity-controls {
     display: flex;
     align-items: center;
@@ -464,14 +467,13 @@
 }
 
 .quantity-btn {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border: none;
-    background: var(--accent-color);
     color: white;
     border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-weight: 700;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
@@ -479,8 +481,22 @@
     justify-content: center;
 }
 
-.quantity-btn:hover {
-    background: #4f46e5;
+/* CLEAR + AND - STYLING */
+.quantity-btn:first-child {
+    background: #ef4444;
+}
+
+.quantity-btn:first-child:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+.quantity-btn:last-child {
+    background: #10b981;
+}
+
+.quantity-btn:last-child:hover {
+    background: #059669;
     transform: scale(1.1);
 }
 
@@ -488,6 +504,7 @@
     opacity: 0.5;
     cursor: not-allowed;
     background: var(--text-secondary);
+    transform: none;
 }
 
 .quantity-display {
@@ -505,20 +522,31 @@
     text-align: right;
 }
 
+/* IMPROVED REMOVE BUTTON */
 .remove-btn {
     background: var(--error-color);
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .remove-btn:hover {
     background: #dc2626;
-    transform: scale(1.05);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.remove-btn i {
+    font-size: 1.1rem;
 }
 
 /* Empty Cart */
@@ -888,6 +916,82 @@
 </style>
 
 <script>
+function getSpecificItemImage(itemName, category) {
+    // Pizza images - specific to each type
+    if (category === 'pizza') {
+        if (itemName.toLowerCase().includes('cheese')) {
+            return 'https://cdn.pixabay.com/photo/2016/04/21/22/50/pizza-1344720_1280.jpg';
+        } else if (itemName.toLowerCase().includes('1 topping')) {
+            return 'https://cdn.pixabay.com/photo/2020/04/01/16/34/pepperoni-4991789_1280.jpg';
+        } else if (itemName.toLowerCase().includes('2 topping')) {
+            return 'https://cdn.pixabay.com/photo/2022/08/02/07/30/pizza-7359753_1280.jpg';
+        } else if (itemName.toLowerCase().includes('3 topping') || itemName.toLowerCase().includes('special')) {
+            return 'https://cdn.pixabay.com/photo/2020/02/09/08/54/pizza-4835869_1280.jpg';
+        }
+    }
+    
+    // Pasta images - specific to each type
+    if (category === 'pasta') {
+        if (itemName.toLowerCase().includes('baked ziti w/meatballs')) {
+            return 'https://assets-us-01.kc-usercontent.com/4353bced-f940-00d0-8c6e-13a0a4a7f5c2/74e76f15-52f6-47b1-bb2d-245e9ccb438d/Baked-Ziti-Meatballs_700x700.jpeg?w=1280&auto=format';
+        } else if (itemName.toLowerCase().includes('baked ziti w/chicken')) {
+            return 'https://krollskorner.com/wp-content/uploads/2020/02/CHICKENPARMKKedits_blog02-1024x1536.jpg';
+        } else if (itemName.toLowerCase().includes('baked ziti')) {
+            return 'https://www.seriouseats.com/thmb/EfnCajGPFPE8TPZhiXAmg6lcEk4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__images__2014__09__20140922-baked-ziti-vicky-wasik-25-024122d5fd8542da895b1be9af658358.jpg';
+        } else if (itemName.toLowerCase().includes('alfredo')) {
+            return 'https://cdn.pixabay.com/photo/2017/05/07/08/56/pasta-2290810_1280.jpg';
+        } else if (itemName.toLowerCase().includes('arrabbiata')) {
+            return 'https://cdn.pixabay.com/photo/2018/07/18/19/12/pasta-3547078_1280.jpg';
+        }
+    }
+    
+    // Salad images - specific to each type
+    if (category === 'salad') {
+        if (itemName.toLowerCase().includes('garden')) {
+            return 'https://www.recipetineats.com/tachyon/2021/08/Garden-Salad_48.jpg?resize=900%2C1260&zoom=0.72g';
+        } else if (itemName.toLowerCase().includes('greek')) {
+            return 'https://cdn.loveandlemons.com/wp-content/uploads/2019/07/greek-salad-2-786x1024.jpg';
+        } else if (itemName.toLowerCase().includes('antipasto')) {
+            return 'https://www.allrecipes.com/thmb/UaZFB-KV0e6Aqr9iyUSYhOxXDCE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/3895858-e2a9a89c5abd4ca3b9db096e6345cd39.jpg';
+        } else if (itemName.toLowerCase().includes('tuna')) {
+            return 'https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2020/04/Tuna-Salad-6-1024x1536.jpg';
+        } else if (itemName.toLowerCase().includes('caesar')) {
+            return 'https://cdn.pixabay.com/photo/2016/03/05/19/02/salad-1239147_1280.jpg';
+        }
+    }
+    
+    // Sub images - specific to each type
+    if (category === 'sub') {
+        if (itemName.toLowerCase().includes('cheese')) {
+            return 'https://media.istockphoto.com/id/171587071/photo/foot-long-roast-beef-and-cheese-sub.jpg?s=2048x2048&w=is&k=20&c=Ak6uEh_VEhlRzlsmlBFs8h65vLuoKNO5FANeSmN3ySE=';
+        } else if (itemName.toLowerCase().includes('italian')) {
+            return 'https://cdn.pixabay.com/photo/2023/04/02/21/38/sandwich-7895477_1280.jpg';
+        } else if (itemName.toLowerCase().includes('meatball')) {
+            return 'https://cdn.pixabay.com/photo/2016/08/09/11/17/sandwich-1580334_1280.jpg';
+        } else if (itemName.toLowerCase().includes('tuna')) {
+            return 'https://cdn.pixabay.com/photo/2016/08/09/11/24/sandwich-1580348_1280.jpg';
+        } else if (itemName.toLowerCase().includes('turkey')) {
+            return 'https://cdn.pixabay.com/photo/2020/06/06/05/31/juicy-sandwich-5265292_1280.jpg';
+        }
+    }
+    
+    // Platter images
+    if (category === 'platter') {
+        return 'https://cdn.pixabay.com/photo/2017/01/26/02/06/christmas-wallpaper-2009590_1280.jpg';
+    }
+    
+    // Fallback images by category
+    const fallbackImages = {
+        pizza: 'https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg',
+        pasta: 'https://cdn.pixabay.com/photo/2018/07/18/19/12/pasta-3547078_1280.jpg',
+        salad: 'https://cdn.pixabay.com/photo/2016/03/05/19/02/salad-1239147_1280.jpg',
+        sub: 'https://cdn.pixabay.com/photo/2020/06/06/05/31/juicy-sandwich-5265292_1280.jpg',
+        platter: 'https://cdn.pixabay.com/photo/2017/01/26/02/06/christmas-wallpaper-2009590_1280.jpg'
+    };
+    
+    return fallbackImages[category] || fallbackImages.pizza;
+}
+
 class ModernCart {
     constructor() {
         this.cart = this.getCart();
@@ -948,7 +1052,7 @@ class ModernCart {
 
     getCategoryInfo(category) {
         const categoryMap = {
-            pizza: { name: 'Pizzas', icon: '🍕', emoji: 'pizza', image_url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=80&h=80&fit=crop' },
+            pizza: { name: 'Pizzas', icon: '🍕', emoji: 'pizza' },
             pasta: { name: 'Pasta', icon: '🍝', emoji: 'pasta' },
             salad: { name: 'Salads', icon: '🥗', emoji: 'salad' },
             sub: { name: 'Subs', icon: '🥪', emoji: 'sub' },
@@ -1024,10 +1128,13 @@ class ModernCart {
     }
 
     createCartItemHTML(item, index) {
+        const imageUrl = item.image_url || getSpecificItemImage(item.item_description, item.category);
+        
         return `
             <div class="cart-item">
-                <img src="${item.image_url || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=80&h=80&fit=crop'}" 
-                     alt="${item.item_description}" class="item-image">
+                <img src="${imageUrl}" 
+                     alt="${item.item_description}" class="item-image"
+                     onerror="this.src='https://via.placeholder.com/90x90/e2e8f0/64748b?text=Food'">
                 
                 <div class="item-details">
                     <div class="item-name">${item.item_description}</div>
@@ -1039,18 +1146,18 @@ class ModernCart {
                 <div class="quantity-controls">
                     <button class="quantity-btn" onclick="cart.updateQuantity(${index}, -1)" 
                             ${(item.quantity || 1) <= 1 ? 'disabled' : ''}>
-                        <i class="fas fa-minus"></i>
+                        −
                     </button>
                     <span class="quantity-display">${item.quantity || 1}</span>
                     <button class="quantity-btn" onclick="cart.updateQuantity(${index}, 1)">
-                        <i class="fas fa-plus"></i>
+                        +
                     </button>
                 </div>
                 
                 <div class="item-total">${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</div>
                 
-                <button class="remove-btn" onclick="cart.removeItem(${index})">
-                    <i class="fas fa-trash"></i>
+                <button class="remove-btn" onclick="cart.removeItem(${index})" title="Remove item">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
         `;
@@ -1080,7 +1187,6 @@ class ModernCart {
     clearCart() {
         if (this.cart.length === 0) return;
         
-        // Remove confirmation alert - direct clear
         this.cart = [];
         this.promoCode = null;
         this.promoDiscount = 0;
@@ -1088,7 +1194,6 @@ class ModernCart {
         this.renderCart();
         this.showToast('Cart cleared successfully');
         
-        // Clear promo code UI
         document.getElementById('promoCode').value = '';
         document.getElementById('promoCode').disabled = false;
         document.getElementById('promoMessage').innerHTML = '';
@@ -1100,7 +1205,7 @@ class ModernCart {
             sum + ((item.price || 0) * (item.quantity || 1)), 0);
         
         const totalItems = this.cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        const tax = subtotal * 0.08; // 8% tax
+        const tax = subtotal * 0.08;
         const discount = this.promoDiscount;
         const total = subtotal + tax - discount;
 
@@ -1109,7 +1214,6 @@ class ModernCart {
         document.getElementById('tax').textContent = `${tax.toFixed(2)}`;
         document.getElementById('totalAmount').textContent = `${total.toFixed(2)}`;
 
-        // Show/hide promo discount row
         const promoDiscountRow = document.getElementById('promoDiscountRow');
         const promoDiscountAmount = document.getElementById('promoDiscountAmount');
         
@@ -1120,7 +1224,6 @@ class ModernCart {
             promoDiscountRow.style.display = 'none';
         }
 
-        // Enable/disable checkout button
         const checkoutBtn = document.getElementById('checkoutBtn');
         checkoutBtn.disabled = this.cart.length === 0;
     }
@@ -1130,7 +1233,6 @@ class ModernCart {
         const promoMessage = document.getElementById('promoMessage');
         const code = promoInput.value.trim().toUpperCase();
 
-        // Predefined promo codes
         const promoCodes = {
             'SAVE10': { discount: 0.10, type: 'percentage', description: '10% off your order' },
             'FIRST20': { discount: 0.20, type: 'percentage', description: '20% off first order' },
@@ -1151,7 +1253,6 @@ class ModernCart {
             promoMessage.innerHTML = `<span class="promo-success"><i class="fas fa-check-circle"></i> ${promo.description} applied!</span>`;
             promoInput.disabled = true;
             
-            // Change apply button to remove button
             const applyBtn = document.getElementById('applyPromo');
             applyBtn.textContent = 'Remove';
             applyBtn.onclick = () => this.removePromoCode();
@@ -1191,7 +1292,6 @@ class ModernCart {
         const originalText = checkoutBtn.innerHTML;
         
         try {
-            // Show loading state
             checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Order...';
             checkoutBtn.disabled = true;
 
@@ -1200,7 +1300,6 @@ class ModernCart {
             const tax = subtotal * 0.08;
             const total = subtotal + tax - this.promoDiscount;
 
-            // Simulate processing time
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             const response = await fetch('/checkout/', {
@@ -1258,19 +1357,12 @@ class ModernCart {
     }
 
     bindEvents() {
-        // Clear cart button
         document.getElementById('clearCart').addEventListener('click', () => this.clearCart());
-        
-        // Checkout button
         document.getElementById('checkoutBtn').addEventListener('click', () => this.checkout());
-        
-        // Promo code
         document.getElementById('applyPromo').addEventListener('click', () => this.applyPromoCode());
         document.getElementById('promoCode').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.applyPromoCode();
         });
-
-        // Category expansion (handled by onclick in HTML)
     }
 }
 
@@ -1278,6 +1370,43 @@ class ModernCart {
 let cart;
 document.addEventListener('DOMContentLoaded', () => {
     cart = new ModernCart();
+    
+    // Apply dark mode if enabled
+    const savedTheme = localStorage.getItem('foodhub-theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.documentElement.classList.add('dark-mode');
+    }
+    
+    // Listen for theme changes
+    document.addEventListener('themeChanged', function(e) {
+        if (e.detail.theme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.documentElement.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+            document.documentElement.classList.remove('dark-mode');
+        }
+    });
+    
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'foodhub-theme') {
+            if (e.newValue === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.documentElement.classList.remove('dark-mode');
+            }
+        }
+        
+        if (e.key === 'cart') {
+            if (cart) {
+                cart.cart = cart.getCart();
+                cart.renderCart();
+            }
+        }
+    });
 });
 
 // Global functions for backward compatibility
@@ -1292,102 +1421,6 @@ function removeFromCart(index) {
 function checkout() {
     if (cart) cart.checkout();
 }
-
-// Enhanced add to cart function for use across the site
-function add_to_cart(item) {
-    try {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        
-        // Check if item already exists
-        const existingIndex = cart.findIndex(cartItem => 
-            cartItem.item_description === item.item_description
-        );
-        
-        if (existingIndex !== -1) {
-            // Update quantity if item exists
-            cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
-        } else {
-            // Add new item
-            cart.push({
-                ...item,
-                quantity: 1
-            });
-        }
-        
-        localStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Update cart count in navbar
-        const totalItems = cart.reduce((sum, cartItem) => sum + (cartItem.quantity || 1), 0);
-        const cartBadges = document.querySelectorAll('.cart-badge, .cart-count, #cart-count');
-        cartBadges.forEach(badge => {
-            if (badge) {
-                badge.textContent = totalItems;
-                if (totalItems > 0) {
-                    badge.style.display = 'inline-flex';
-                } else {
-                    badge.style.display = 'none';
-                }
-            }
-        });
-        
-        // Show success message
-        showToast('Item added to cart!');
-        
-    } catch (error) {
-        console.error('Error adding to cart:', error);
-        showToast('Error adding item to cart', 'error');
-    }
-}
-
-// Global toast function
-function showToast(message, type = 'success') {
-    // Create toast if it doesn't exist
-    let toast = document.getElementById('successToast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'successToast';
-        toast.className = 'toast';
-        toast.innerHTML = `
-            <div class="toast-content">
-                <i class="fas fa-check-circle"></i>
-                <span id="toastMessage">${message}</span>
-            </div>
-        `;
-        document.body.appendChild(toast);
-    }
-    
-    const toastMessage = document.getElementById('toastMessage');
-    toastMessage.textContent = message;
-    toast.className = `toast ${type}`;
-    toast.classList.add('show');
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 4000);
-}
-
-// Update cart count on page load
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        const cartBadges = document.querySelectorAll('.cart-badge, .cart-count, #cart-count');
-        cartBadges.forEach(badge => {
-            if (badge) {
-                badge.textContent = totalItems;
-                if (totalItems > 0) {
-                    badge.style.display = 'inline-flex';
-                } else {
-                    badge.style.display = 'none';
-                }
-            }
-        });
-    } catch (error) {
-        console.error('Error updating cart count:', error);
-    }
-});
 </script>
-
-<script src="{% static 'orders/js/base.js' %}"></script>
 
 {% endblock %}
